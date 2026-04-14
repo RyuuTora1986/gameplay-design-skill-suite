@@ -1,0 +1,67 @@
+﻿<svg width="1600" height="980" viewBox="0 0 1600 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="103" y1="42" x2="1495" y2="907" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#091A2A"/>
+      <stop offset="0.55" stop-color="#11324C"/>
+      <stop offset="1" stop-color="#F18849"/>
+    </linearGradient>
+    <linearGradient id="hero" x1="130" y1="132" x2="936" y2="668" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#081624"/>
+      <stop offset="1" stop-color="#102B42"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="980" rx="40" fill="url(#bg)"/>
+  <rect x="72" y="62" width="1456" height="856" rx="34" fill="#07131F" fill-opacity="0.32" stroke="#FFFFFF" stroke-opacity="0.18"/>
+  <rect x="114" y="108" width="1372" height="68" rx="24" fill="#0A1E30" stroke="#FFFFFF" stroke-opacity="0.14"/>
+  <circle cx="166" cy="142" r="10" fill="#FF8A3D"/>
+  <circle cx="198" cy="142" r="10" fill="#FFE56E"/>
+  <circle cx="230" cy="142" r="10" fill="#5FE68D"/>
+  <text x="274" y="150" fill="#D6FF4D" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="600">gameplay-design-skill-suite // promo page preview</text>
+
+  <rect x="114" y="202" width="868" height="322" rx="32" fill="url(#hero)" stroke="#FFFFFF" stroke-opacity="0.1"/>
+  <text x="156" y="276" fill="#D6FF4D" font-family="IBM Plex Mono, monospace" font-size="22" font-weight="600" letter-spacing="3">GAMEPLAY DESIGN OPS</text>
+  <text x="154" y="386" fill="#FFF3D6" font-family="Bungee, Impact, sans-serif" font-size="102">CHAOS IN.</text>
+  <text x="154" y="490" fill="#FFF3D6" font-family="Bungee, Impact, sans-serif" font-size="102">SPEC OUT.</text>
+  <text x="157" y="556" fill="#C7D7E3" font-family="Space Grotesk, sans-serif" font-size="28">Orchestrator-first workflow. Ordered stages. Scope cuts. Coding handoff.</text>
+  <rect x="156" y="602" width="280" height="56" rx="28" fill="#D6FF4D"/>
+  <text x="192" y="638" fill="#082032" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700">Open GitHub Repo</text>
+  <rect x="456" y="602" width="248" height="56" rx="28" fill="none" stroke="#FFF3D6" stroke-opacity="0.4"/>
+  <text x="511" y="638" fill="#FFF3D6" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700">See Pipeline</text>
+
+  <rect x="1020" y="202" width="466" height="322" rx="32" fill="#0A2235" stroke="#FFFFFF" stroke-opacity="0.1"/>
+  <circle cx="1252" cy="356" r="130" fill="#173A56"/>
+  <circle cx="1252" cy="356" r="108" fill="#FDE4CE"/>
+  <path d="M1182 340C1204 319 1235 310 1268 315C1300 320 1328 337 1342 365C1356 392 1353 425 1334 449C1314 473 1283 487 1249 487C1214 487 1180 472 1160 445C1141 418 1138 376 1154 347C1161 334 1171 324 1182 340Z" fill="#173A56"/>
+  <circle cx="1218" cy="364" r="18" fill="#1F3E63"/>
+  <circle cx="1286" cy="364" r="18" fill="#1F3E63"/>
+  <path d="M1219 420C1237 432 1264 432 1282 420" stroke="#A65461" stroke-width="10" stroke-linecap="round"/>
+  <rect x="1076" y="248" width="160" height="40" rx="16" fill="#FFF3D6"/>
+  <text x="1099" y="274" fill="#082032" font-family="Bungee, Impact, sans-serif" font-size="18">LOCK DIRECTION</text>
+  <rect x="1248" y="472" width="150" height="40" rx="16" fill="#D6FF4D"/>
+  <text x="1278" y="498" fill="#082032" font-family="Bungee, Impact, sans-serif" font-size="18">CUT SCOPE</text>
+
+  <rect x="114" y="566" width="650" height="284" rx="28" fill="#0A2235" stroke="#FFFFFF" stroke-opacity="0.1"/>
+  <text x="150" y="614" fill="#56DFF4" font-family="IBM Plex Mono, monospace" font-size="20" font-weight="600">PIPELINE RAIL</text>
+  <g font-family="Space Grotesk, sans-serif" font-size="26" font-weight="700" fill="#FFF3D6">
+    <rect x="150" y="642" width="578" height="36" rx="18" fill="#122F46"/>
+    <text x="182" y="667">01 Input Normalizer</text>
+    <rect x="150" y="690" width="578" height="36" rx="18" fill="#122F46"/>
+    <text x="182" y="715">02 Fantasy Loop Designer</text>
+    <rect x="150" y="738" width="578" height="36" rx="18" fill="#122F46"/>
+    <text x="182" y="763">03 Pacing And Structure</text>
+    <rect x="150" y="786" width="578" height="36" rx="18" fill="#122F46"/>
+    <text x="182" y="811">04 World And Narrative Weaver</text>
+  </g>
+
+  <rect x="800" y="566" width="686" height="284" rx="28" fill="#0A2235" stroke="#FFFFFF" stroke-opacity="0.1"/>
+  <text x="836" y="614" fill="#FF8A3D" font-family="IBM Plex Mono, monospace" font-size="20" font-weight="600">COMMERCIAL OFFER BAND</text>
+  <rect x="836" y="650" width="180" height="152" rx="22" fill="#132F46"/>
+  <rect x="1054" y="636" width="180" height="166" rx="22" fill="#173450" stroke="#D6FF4D" stroke-opacity="0.5"/>
+  <rect x="1272" y="650" width="180" height="152" rx="22" fill="#132F46"/>
+  <text x="866" y="690" fill="#D6FF4D" font-family="IBM Plex Mono, monospace" font-size="16">STARTER</text>
+  <text x="863" y="740" fill="#FFF3D6" font-family="Bungee, Impact, sans-serif" font-size="42">$490+</text>
+  <text x="1084" y="684" fill="#D6FF4D" font-family="IBM Plex Mono, monospace" font-size="16">TEAM</text>
+  <text x="1075" y="742" fill="#FFF3D6" font-family="Bungee, Impact, sans-serif" font-size="48">$2.4K+</text>
+  <text x="1301" y="690" fill="#D6FF4D" font-family="IBM Plex Mono, monospace" font-size="16">CUSTOM</text>
+  <text x="1298" y="740" fill="#FFF3D6" font-family="Bungee, Impact, sans-serif" font-size="42">$8K+</text>
+</svg>

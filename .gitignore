@@ -5,3 +5,4 @@ __pycache__/
 *.pyd
 Thumbs.db
 .DS_Store
+.tmp-chrome-profile/
