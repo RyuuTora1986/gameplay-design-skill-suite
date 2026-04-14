@@ -1,0 +1,4 @@
+interface:
+  display_name: "World And Narrative Weaver"
+  short_description: "Wrap world and narrative tightly around gameplay."
+  default_prompt: "Use $gameplay-world-and-narrative-weaver to build a world and story flow that strengthens this gameplay loop."

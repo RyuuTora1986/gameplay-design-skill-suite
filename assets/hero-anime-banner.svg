@@ -1,0 +1,84 @@
+<svg width="1600" height="520" viewBox="0 0 1600 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="88" y1="46" x2="1511" y2="491" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#081B2F"/>
+      <stop offset="0.43" stop-color="#123A58"/>
+      <stop offset="1" stop-color="#F28B50"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="109" y1="112" x2="851" y2="427" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A223A" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#102F45" stop-opacity="0.78"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="1078" y1="102" x2="1385" y2="446" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14243B"/>
+      <stop offset="0.55" stop-color="#1A3757"/>
+      <stop offset="1" stop-color="#274E77"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="1050" y1="137" x2="1287" y2="379" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFDCC7"/>
+      <stop offset="1" stop-color="#F3B99B"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="1000" y1="78" x2="1416" y2="441" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD46B"/>
+      <stop offset="1" stop-color="#F56A4D"/>
+    </linearGradient>
+    <filter id="blur" x="836" y="0" width="764" height="520" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="520" rx="28" fill="url(#bg)"/>
+  <circle cx="1350" cy="136" r="112" fill="#FFD46B" fill-opacity="0.16"/>
+  <circle cx="1480" cy="72" r="54" fill="#FFF4CF" fill-opacity="0.18"/>
+  <circle cx="1230" cy="432" r="86" fill="#F56A4D" fill-opacity="0.18"/>
+
+  <g filter="url(#blur)">
+    <path d="M1122 32C1265 49 1447 163 1522 293C1546 335 1564 384 1551 446L1600 520H1048C973 468 954 408 955 341C955 227 1007 124 1122 32Z" fill="#F7AE74" fill-opacity="0.22"/>
+  </g>
+
+  <rect x="72" y="78" width="868" height="364" rx="28" fill="url(#panel)" stroke="#FFFFFF" stroke-opacity="0.18"/>
+  <rect x="104" y="112" width="268" height="38" rx="19" fill="#F8BE6A" fill-opacity="0.16"/>
+  <text x="130" y="137" fill="#FFE2AF" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="2">ORCHESTRATOR-FIRST GAME DESIGN</text>
+
+  <text x="106" y="224" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="62" font-weight="800">
+    <tspan x="106" dy="0">Gameplay Design</tspan>
+    <tspan x="106" dy="74">Skill Suite</tspan>
+  </text>
+
+  <text x="109" y="344" fill="#C7D6E3" font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="500">
+    <tspan x="109" dy="0">Lock direction. Run ordered stages. Cut scope early.</tspan>
+    <tspan x="109" dy="38">Ship one gameplay package, then expand into a full Chinese spec.</tspan>
+  </text>
+
+  <g opacity="0.9">
+    <rect x="107" y="382" width="174" height="36" rx="18" fill="#132F46"/>
+    <rect x="291" y="382" width="188" height="36" rx="18" fill="#132F46"/>
+    <rect x="489" y="382" width="158" height="36" rx="18" fill="#132F46"/>
+    <text x="128" y="406" fill="#E4EDF4" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">8 coordinated skills</text>
+    <text x="314" y="406" fill="#E4EDF4" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">validated example</text>
+    <text x="519" y="406" fill="#E4EDF4" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">scope discipline</text>
+  </g>
+
+  <g transform="translate(930 34)">
+    <path d="M145 39C217 15 296 27 344 69C392 111 410 178 404 237C397 307 367 391 296 433C251 460 196 468 142 452C89 436 44 395 21 333C-1 274 3 204 35 146C59 102 95 58 145 39Z" fill="#0F2238" fill-opacity="0.42"/>
+    <path d="M126 53C197 26 269 31 318 63C367 95 395 156 393 221C391 286 361 359 308 400C256 440 177 451 110 420C43 389 9 318 11 246C13 174 51 82 126 53Z" fill="url(#accent)" fill-opacity="0.18"/>
+
+    <path d="M190 84C250 56 327 67 362 127C389 174 383 237 368 285C357 320 347 347 322 375C304 395 274 410 236 414C172 422 100 389 72 326C50 277 50 208 73 162C95 118 133 95 190 84Z" fill="url(#hair)"/>
+    <path d="M138 214C145 150 184 116 235 110C291 103 343 137 353 205C359 250 349 311 309 344C275 372 229 381 186 370C135 356 111 305 116 257C118 242 134 231 138 214Z" fill="url(#skin)"/>
+    <path d="M173 214C190 204 214 203 229 215C245 227 242 249 227 260C211 271 185 269 172 255C159 242 159 221 173 214Z" fill="#FFF8F3"/>
+    <path d="M257 214C274 204 298 203 313 215C329 227 326 249 311 260C295 271 269 269 256 255C243 242 243 221 257 214Z" fill="#FFF8F3"/>
+    <ellipse cx="200" cy="236" rx="20" ry="24" fill="#213B63"/>
+    <ellipse cx="285" cy="236" rx="20" ry="24" fill="#213B63"/>
+    <ellipse cx="192" cy="230" rx="5" ry="6" fill="#F8FAFC"/>
+    <ellipse cx="278" cy="230" rx="5" ry="6" fill="#F8FAFC"/>
+    <path d="M209 288C223 299 261 299 274 288" stroke="#9F5061" stroke-width="8" stroke-linecap="round"/>
+    <path d="M165 191C184 179 210 177 230 185" stroke="#173253" stroke-width="10" stroke-linecap="round"/>
+    <path d="M253 185C272 177 298 179 317 191" stroke="#173253" stroke-width="10" stroke-linecap="round"/>
+    <path d="M140 209C127 192 126 163 138 136C151 106 179 89 214 79C237 72 266 71 291 76C315 81 340 93 356 111C387 145 381 199 366 216C355 193 346 171 327 154C306 136 278 126 245 126C213 126 183 135 165 151C147 166 139 188 140 209Z" fill="url(#hair)"/>
+    <path d="M160 350C185 332 209 327 243 327C278 327 305 333 328 353C314 385 286 418 243 420C205 422 175 392 160 350Z" fill="#F6C7A8"/>
+    <path d="M150 351C146 406 116 445 74 474H405C362 445 336 406 331 351C302 369 272 379 241 380C210 381 180 371 150 351Z" fill="#F3F0EC"/>
+    <path d="M169 353C190 366 215 372 241 372C268 372 293 364 312 351L349 419H135L169 353Z" fill="#FFFAF4"/>
+    <path d="M108 178C117 154 128 135 145 120" stroke="#FFDDA0" stroke-width="5" stroke-linecap="round" stroke-opacity="0.7"/>
+    <path d="M350 162C359 181 362 204 360 226" stroke="#FFDDA0" stroke-width="5" stroke-linecap="round" stroke-opacity="0.7"/>
+  </g>
+</svg>

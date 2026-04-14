@@ -1,0 +1,4 @@
+interface:
+  display_name: "System Weaver And Scope Cutter"
+  short_description: "Build the system network and force scope discipline."
+  default_prompt: "Use $gameplay-system-weaver-and-scope-cutter to turn this design into a system map with a hard cut list."

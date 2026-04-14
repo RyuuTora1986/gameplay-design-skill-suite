@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pacing And Structure"
+  short_description: "Design pacing layers, beats, and replay structure."
+  default_prompt: "Use $gameplay-pacing-and-structure to turn this gameplay loop into a strong experience rhythm."

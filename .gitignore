@@ -1,0 +1,7 @@
+# Ignore local Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+Thumbs.db
+.DS_Store

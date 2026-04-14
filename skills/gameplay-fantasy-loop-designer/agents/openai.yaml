@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fantasy Loop Designer"
+  short_description: "Design player promise and repeatable fun loops."
+  default_prompt: "Use $gameplay-fantasy-loop-designer to derive the strongest player promise and gameplay loop from these constraints."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gameplay Design Orchestrator"
+  short_description: "Turn fuzzy game ideas into a structured gameplay design package."
+  default_prompt: "Use $gameplay-design-orchestrator to turn this raw game idea into a structured Gameplay Design Package."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Design Spec"
+  short_description: "AI-ready game design specs for OpenClaw."
+  default_prompt: "Use $game-design-spec to turn these game design notes into a complete executable design package."

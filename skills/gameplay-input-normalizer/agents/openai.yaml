@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gameplay Input Normalizer"
+  short_description: "Normalize messy inspiration into gameplay design constraints."
+  default_prompt: "Use $gameplay-input-normalizer to turn this messy game input into clear design constraints."

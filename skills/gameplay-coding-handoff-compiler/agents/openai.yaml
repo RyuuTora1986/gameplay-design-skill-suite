@@ -1,0 +1,4 @@
+interface:
+  display_name: "Coding Handoff Compiler"
+  short_description: "Compile gameplay design into coding-ready execution input."
+  default_prompt: "Use $gameplay-coding-handoff-compiler to convert this gameplay design into coding-ready structure."
