@@ -2,7 +2,7 @@
 
 ## Topology
 
-This suite is no longer just an upstream design chain. It is now a three-layer design-to-execution chain:
+This suite is no longer just an upstream design chain. It is now a four-layer design-to-execution chain:
 
 ```text
 gameplay-design-orchestrator
@@ -14,6 +14,7 @@ gameplay-design-orchestrator
   -> gameplay-coding-handoff-compiler
   -> game-design-spec
   -> game-design-execution-compiler
+  -> game-design-execution-runner
 ```
 
 ## Layer Model
@@ -44,6 +45,12 @@ This layer converts the mature spec into an agent-executable task graph:
 
 - `execution-plan.json`
 - `execution-plan.md`
+
+### Layer 4: Execution coordination
+
+- `game-design-execution-runner`
+
+This layer consumes `execution-plan.json`, persists `execution-run-state.json`, and hands one bounded task at a time to workers.
 
 ## Skill Notes
 
@@ -139,8 +146,21 @@ This layer converts the mature spec into an agent-executable task graph:
 - Main value:
   - splits work into one-iteration tasks
   - binds tasks back to source refs and canonical IDs
-  - makes dependency order explicit
-  - turns the design chain into an execution chain
+- makes dependency order explicit
+- turns the design chain into an execution chain
+
+### game-design-execution-runner
+
+- Role: execution coordinator
+- Input: validated `execution-plan.json`
+- Output:
+  - `execution-run-state.json`
+  - one bounded worker handoff at a time
+- Main value:
+  - picks the next runnable task
+  - persists run state after every transition
+  - stops task sprawl by enforcing one-task scope
+  - creates a stable bridge into subagent or coding-worker execution
 
 ## Public Demo Priorities
 
@@ -150,7 +170,8 @@ If you are showing this suite publicly, prioritize these talking points:
 2. validated gameplay package output
 3. full Chinese game spec expansion
 4. execution-plan compilation for agent implementation
-5. validators and real example artifacts
+5. runner prototype for task-by-task coordination
+6. validators and real example artifacts
 
 ## What Not To Oversell
 

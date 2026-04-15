@@ -17,7 +17,7 @@
   ·
   <a href="docs/pricing-and-commercial-offers.md">Commercial Offers</a>
   ·
-  <a href="docs/release-notes-v0.2.0.md">Release Notes</a>
+  <a href="docs/release-notes-v0.3.0.md">Release Notes</a>
 </p>
 
 ## What This Is
@@ -26,7 +26,7 @@ This repository packages a game-design workflow for Codex around one hard rule:
 
 `gameplay-design-orchestrator` is the only normal upstream entry point.
 
-Instead of exposing nine unrelated prompts and hoping the user manually glues them together, this suite:
+Instead of exposing ten unrelated prompts and hoping the user manually glues them together, this suite:
 
 - locks direction before system expansion
 - drives the gameplay stages in order
@@ -34,6 +34,7 @@ Instead of exposing nine unrelated prompts and hoping the user manually glues th
 - compiles the result into a downstream-ready gameplay package
 - expands that package into a full Chinese game spec when needed
 - compiles that spec into an execution plan for agent-driven implementation
+- includes a first runner prototype for stepping through that execution plan
 
 The result is not just "better ideation." It is a more reliable bridge from vague concept to structured execution.
 
@@ -62,6 +63,7 @@ Most public prompt packs for game design fail in one of three ways:
 | `gameplay-coding-handoff-compiler` | Compiles the locked package into scenes, UI, objects, states, variables, and prototype acceptance |
 | `game-design-spec` | Expands the mature gameplay package into a full Chinese game design spec and task pack |
 | `game-design-execution-compiler` | Compiles the mature spec into `execution-plan.json` and `execution-plan.md` for agent execution |
+| `game-design-execution-runner` | Drives one execution-plan task at a time, persists state, and prepares bounded worker handoffs |
 
 For topology details, see [docs/skill-catalog.md](docs/skill-catalog.md).
 
@@ -81,6 +83,8 @@ Raw game idea
   -> Full Chinese Game Design Spec
   -> game-design-execution-compiler
   -> execution-plan.json + execution-plan.md
+  -> game-design-execution-runner
+  -> execution-run-state.json + worker handoff
 ```
 
 Operational rules:
@@ -106,6 +110,7 @@ The example package includes:
 - a gameplay package with assumption list, system indexes, formulas, and prototype acceptance
 - a full spec with system rules, UI tasking, balance tasks, art/audio constraints, QA, and delivery mapping
 - an execution plan with small dependency-aware tasks tied back to source refs and canonical IDs
+- a runner-ready path that can initialize state and step through tasks in dependency order
 
 This is not a fake sample or a one-page teaser. It is a shipped validation artifact.
 
@@ -175,6 +180,7 @@ Or run the validators individually:
 python .\skills\gameplay-design-orchestrator\scripts\validate_gameplay_package.py --package-dir .\examples\gyro-battle\final-package
 python .\skills\game-design-spec\scripts\validate_spec.py --task-dir .\examples\gyro-battle\final-spec
 python .\skills\game-design-execution-compiler\scripts\validate_execution_plan.py --plan-dir .\examples\gyro-battle\final-execution-plan
+python .\skills\game-design-execution-runner\scripts\run_execution_plan.py init --plan-dir .\tmp-runner-validation --repo-root . --branch main
 ```
 
 ## Repository Layout
@@ -194,11 +200,11 @@ scripts/     Validation helpers
 - [docs/gyro-battle-case-study.md](docs/gyro-battle-case-study.md)
 - [docs/licensing-and-packaging.md](docs/licensing-and-packaging.md)
 - [docs/pricing-and-commercial-offers.md](docs/pricing-and-commercial-offers.md)
-- [docs/release-notes-v0.2.0.md](docs/release-notes-v0.2.0.md)
+- [docs/release-notes-v0.3.0.md](docs/release-notes-v0.3.0.md)
 
 ## Status
 
-- Version: `v0.2.0`
+- Version: `v0.3.0`
 - Public repo status: live
-- Validation status: included gameplay package, spec, and execution plan pass local validators
+- Validation status: included gameplay package, spec, execution plan, and runner smoke path pass local checks
 - Business posture: source-available showcase with commercial licensing path

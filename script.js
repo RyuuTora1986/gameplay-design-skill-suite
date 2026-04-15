@@ -172,10 +172,10 @@ const copy = {
       primary: "Open GitHub Repo",
       secondary: "See The Pipeline",
       signals: [
-        "9 coordinated skills",
+        "10 coordinated skills",
         "1 orchestrator-first entry",
         "validated gyro-battle example",
-        "spec plus execution-plan output",
+        "spec, plan, and runner path",
       ],
       stageLabel: "Cover Art // Live Workflow",
       stickers: ["LOCK DIRECTION", "CUT SCOPE", "SHIP THE PACKAGE"],
@@ -192,7 +192,7 @@ const copy = {
       kicker: "The pipeline is the product",
       title: "No random prompt soup. No stage skipping.",
       body:
-        'The strongest selling point here is not "good writing." It is workflow ownership. One orchestrator. Ordered stages. Explicit loop-backs. Downstream-ready packaging that can continue into spec expansion and execution-plan compilation.',
+        'The strongest selling point here is not "good writing." It is workflow ownership. One orchestrator. Ordered stages. Explicit loop-backs. Downstream-ready packaging that can continue into spec expansion, execution-plan compilation, and runner-driven task coordination.',
       summaryLabel: "Current highlighted stage",
     },
     caseStudy: {
@@ -205,7 +205,7 @@ const copy = {
         "biggest scope risk: unreadable physics becomes random noise",
         "loop-back count: 2",
         "output: package + review notes + spec + execution plan",
-        "validation: package passed / spec passed / plan passed",
+        "validation: package passed / spec passed / plan passed / runner path checked",
       ],
       tag: "Why this example matters",
       copyTitle: "It proves the workflow can survive contact with a real game concept.",
@@ -228,7 +228,7 @@ const copy = {
     },
     compare: {
       kicker: "Positioning",
-      title: "Built for design operators, not prompt tourists.",
+      title: "Built for design operators, not prompt tourists or task sprawl.",
       badLabel: "Generic prompt packs",
       badList: [
         "start with vibes and genre labels",
@@ -243,7 +243,7 @@ const copy = {
         "downstream stages stay ordered",
         "MVP keep / cut stays visible",
         "coding handoff is part of the chain",
-        "spec and execution-plan validators included",
+        "spec, execution-plan, and runner checks included",
       ],
     },
     offers: {
@@ -337,10 +337,10 @@ const copy = {
       primary: "打开 GitHub 仓库",
       secondary: "查看完整流程",
       signals: [
-        "9 个协同技能",
+        "10 个协同技能",
         "1 个 orchestrator 总入口",
         "已验证 gyro-battle 示例",
-        "输出规格与执行计划",
+        "输出规格、计划与 runner 路径",
       ],
       stageLabel: "封面画面 // 实战工作流",
       stickers: ["先锁方向", "先切范围", "再交付玩法包"],
@@ -357,7 +357,7 @@ const copy = {
       kicker: "真正的产品是这条流程",
       title: "不是提示词大杂烩，也不是想跳哪步就跳哪步。",
       body:
-        "这里最值钱的不是“写得好看”，而是流程所有权。一个 orchestrator。严格的阶段顺序。显式回环。先打包成规格，再继续编译成执行计划。",
+        "这里最值钱的不是“写得好看”，而是流程所有权。一个 orchestrator。严格的阶段顺序。显式回环。先打包成规格，再编译成执行计划，并继续交给 runner 推进。",
       summaryLabel: "当前高亮阶段",
     },
     caseStudy: {
@@ -370,7 +370,7 @@ const copy = {
         "最大范围风险：物理反馈失控后会变成随机噪音",
         "回环修订次数：2",
         "产物：玩法包 + 复盘记录 + 完整规格 + 执行计划",
-        "验证状态：玩法包通过 / 规格通过 / 计划通过",
+        "验证状态：玩法包通过 / 规格通过 / 计划通过 / runner 路径已检查",
       ],
       tag: "这个案例为什么重要",
       copyTitle: "它证明这条工作流能扛住真实游戏概念，而不是只会做展示页。",
@@ -393,7 +393,7 @@ const copy = {
     },
     compare: {
       kicker: "定位",
-      title: "这是给真正做设计运营的人，不是给提示词游客的。",
+      title: "这是给真正做设计运营的人，不是给提示词游客和任务堆砌者的。",
       badLabel: "通用提示词包",
       badList: [
         "从题材和氛围词起步",
@@ -408,7 +408,7 @@ const copy = {
         "下游阶段顺序保持严格",
         "MVP 保留 / 删减全程可见",
         "编码交接是链路内建部分",
-        "自带规格与执行计划验证器",
+        "自带规格、执行计划和 runner 检查链",
       ],
     },
     offers: {
@@ -475,7 +475,7 @@ const copy = {
       kicker: "最后一步",
       title: "如果你的游戏设计流程还像抽提示词彩票，先修拓扑，再谈产出。",
       body:
-        "先 clone 仓库，拆读案例，验证 package、spec 和 execution plan，再把这套技能链打包进你自己的 Codex 运行时或工作室流程里。",
+        "先 clone 仓库，拆读案例，验证 package、spec、execution plan 和 runner 路径，再把这套技能链打包进你自己的 Codex 运行时或工作室流程里。",
       primary: "查看仓库",
       secondary: "阅读商业方案",
     },

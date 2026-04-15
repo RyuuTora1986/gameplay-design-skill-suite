@@ -1,0 +1,4 @@
+interface:
+  display_name: "Execution Runner"
+  short_description: "Coordinate one execution-plan task at a time."
+  default_prompt: "Use $game-design-execution-runner to load the execution plan, pick the next runnable task, and prepare a bounded worker handoff."

@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>一套面向 Codex 的 orchestrator-first 游戏设计技能体系，用来把原始游戏想法压缩成经过验证的玩法设计包、中文生产级游戏规格书，以及可供 agent 执行的 execution plan。</strong>
+  <strong>一套面向 Codex 的 orchestrator-first 游戏设计技能体系，用来把原始游戏想法压缩成经过验证的玩法设计包、中文生产级游戏规格书、execution plan，以及最小可用的 runner 协调层。</strong>
 </p>
 
 <p align="center">
@@ -17,12 +17,12 @@
   路
   <a href="docs/pricing-and-commercial-offers.md">商业化与定价</a>
   路
-  <a href="docs/release-notes-v0.2.0.md">Release Notes</a>
+  <a href="docs/release-notes-v0.3.0.md">Release Notes</a>
 </p>
 
 ## 这是什么
 
-这不是 9 个互不相干的 prompt，也不是一堆随便拼起来的策划模板。
+这不是 10 个互不相干的 prompt，也不是一堆随便拼起来的策划模板。
 
 它围绕一条硬规则展开：
 
@@ -36,6 +36,7 @@
 - 把结果编译成下游 AI 工具能继续消费的 Gameplay Design Package
 - 在需要时展开成完整中文游戏规格书
 - 在实现前继续编译成 agent 可执行的 execution plan
+- 用最小 runner 原型按依赖顺序驱动任务执行
 
 它解决的不是“灵感更多”，而是“从模糊概念到结构化执行”的可靠链路。
 
@@ -64,6 +65,7 @@
 | `gameplay-coding-handoff-compiler` | 把玩法包编译成 scene、UI、object、state、variable 和 prototype acceptance |
 | `game-design-spec` | 将成熟玩法包展开成完整中文游戏规格书与任务包 |
 | `game-design-execution-compiler` | 把成熟 spec 编译成 `execution-plan.json` 和 `execution-plan.md`，供 agent 执行 |
+| `game-design-execution-runner` | 读取 execution plan、持久化 run state，并一次交付一个受控任务给 worker |
 
 拓扑细节见 [docs/skill-catalog.md](docs/skill-catalog.md)。
 
@@ -83,6 +85,8 @@ Raw game idea
   -> Full Chinese Game Design Spec
   -> game-design-execution-compiler
   -> execution-plan.json + execution-plan.md
+  -> game-design-execution-runner
+  -> execution-run-state.json + worker handoff
 ```
 
 几个关键约束：
@@ -108,6 +112,7 @@ Raw game idea
 - 带假设清单、系统索引、公式和原型验收的玩法包
 - 包含 UI、平衡、配置、音画、QA 和交付映射的完整规格
 - 一个绑定 source refs 和 canonical IDs 的 execution plan
+- 一条可初始化状态并按依赖顺序逐任务推进的 runner 路径
 
 它不是 teaser，也不是伪样例，而是通过本地验证器的完整交付物。
 
@@ -175,6 +180,7 @@ PowerShell：
 python .\skills\gameplay-design-orchestrator\scripts\validate_gameplay_package.py --package-dir .\examples\gyro-battle\final-package
 python .\skills\game-design-spec\scripts\validate_spec.py --task-dir .\examples\gyro-battle\final-spec
 python .\skills\game-design-execution-compiler\scripts\validate_execution_plan.py --plan-dir .\examples\gyro-battle\final-execution-plan
+python .\skills\game-design-execution-runner\scripts\run_execution_plan.py init --plan-dir .\tmp-runner-validation --repo-root . --branch main
 ```
 
 ## 目录结构
@@ -194,11 +200,11 @@ scripts/     校验脚本
 - [docs/gyro-battle-case-study.md](docs/gyro-battle-case-study.md)
 - [docs/licensing-and-packaging.md](docs/licensing-and-packaging.md)
 - [docs/pricing-and-commercial-offers.md](docs/pricing-and-commercial-offers.md)
-- [docs/release-notes-v0.2.0.md](docs/release-notes-v0.2.0.md)
+- [docs/release-notes-v0.3.0.md](docs/release-notes-v0.3.0.md)
 
 ## 当前状态
 
-- 版本：`v0.2.0`
+- 版本：`v0.3.0`
 - 仓库状态：已公开
-- 验证状态：玩法包、规格书和 execution plan 均可通过本地验证
+- 验证状态：玩法包、规格书、execution plan 和 runner smoke path 均可通过本地检查
 - 商业姿态：公开展示 + 商业授权通道

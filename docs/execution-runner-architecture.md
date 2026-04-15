@@ -4,7 +4,7 @@
 
 Define the next layer after `game-design-execution-compiler`: a worker-facing execution runner that consumes `execution-plan.json` and drives implementation work in a controlled, reviewable order.
 
-This document is architecture only. It does not introduce the runner yet.
+This document now describes the architecture behind the initial runner prototype in `skills/game-design-execution-runner/`, while still acting as the higher-level design reference.
 
 ## Why This Layer Exists
 
@@ -180,7 +180,7 @@ If not, the task returns to `failed` or `blocked`, not `completed`.
 
 ## Future Skill Candidates
 
-If this layer is productized, the next likely additions are:
+With the first runner prototype now added, the next likely additions are:
 
 - `game-design-execution-runner`
   - consumes plan

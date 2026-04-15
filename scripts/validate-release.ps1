@@ -14,4 +14,18 @@ Write-Host "[3/3] Validating execution plan example..."
 python "$root\\skills\\game-design-execution-compiler\\scripts\\validate_execution_plan.py" `
   --plan-dir "$root\\examples\\gyro-battle\\final-execution-plan"
 
+Write-Host "[4/4] Smoke-testing execution runner..."
+$tmpDir = Join-Path $root "tmp-runner-validation"
+if (Test-Path $tmpDir) {
+  Remove-Item -Recurse -Force $tmpDir
+}
+New-Item -ItemType Directory -Path $tmpDir | Out-Null
+Copy-Item "$root\\examples\\gyro-battle\\final-execution-plan\\execution-plan.json" "$tmpDir\\execution-plan.json"
+Copy-Item "$root\\examples\\gyro-battle\\final-execution-plan\\execution-plan.md" "$tmpDir\\execution-plan.md"
+python "$root\\skills\\game-design-execution-runner\\scripts\\run_execution_plan.py" `
+  init --plan-dir "$tmpDir" --repo-root "$root" --branch "main"
+python "$root\\skills\\game-design-execution-runner\\scripts\\run_execution_plan.py" `
+  next --plan-dir "$tmpDir" --format json
+Remove-Item -Recurse -Force $tmpDir
+
 Write-Host "Validation complete."
