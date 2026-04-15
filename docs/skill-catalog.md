@@ -164,6 +164,7 @@ This layer consumes `execution-plan.json`, persists `execution-run-state.json`, 
   - creates a stable bridge into subagent or coding-worker execution
   - exposes an honest file-based dispatch boundary for later automation
   - separates dispatch issuance from worker acknowledgement
+  - binds completion evidence to the active dispatch and exposes a worker adapter for external executors
 
 ## Public Demo Priorities
 

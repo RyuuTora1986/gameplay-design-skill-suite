@@ -22,6 +22,8 @@ The chain now covers:
 - added explicit `ack` so runner dispatch can track worker pickup before completion
 - added persisted `execution-run-state.json` flow for resumable execution
 - added file-based dispatch packets for bounded worker handoff
+- added dispatch-bound review gate checks on completion evidence
+- added `worker_adapter.py` for external worker pickup / complete / fail / block flows
 - updated public docs to present the suite as a design-to-execution operating chain
 
 ## Why This Matters

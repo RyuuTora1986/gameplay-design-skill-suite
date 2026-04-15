@@ -37,6 +37,8 @@ Instead of exposing ten unrelated prompts and hoping the user manually glues the
 - includes a first runner prototype for stepping through that execution plan
 - includes a dispatch layer that emits stable worker packets instead of pretending to auto-launch agents
 - includes a runner-managed `dispatch -> ack -> complete` lifecycle so packet export and worker ownership are separate steps
+- includes dispatch review-gate checks so completion evidence must match the active dispatch and acknowledged worker
+- includes a worker adapter so external workers can execute against a dispatch directory instead of raw runner internals
 
 The result is not just "better ideation." It is a more reliable bridge from vague concept to structured execution.
 
@@ -65,7 +67,7 @@ Most public prompt packs for game design fail in one of three ways:
 | `gameplay-coding-handoff-compiler` | Compiles the locked package into scenes, UI, objects, states, variables, and prototype acceptance |
 | `game-design-spec` | Expands the mature gameplay package into a full Chinese game design spec and task pack |
 | `game-design-execution-compiler` | Compiles the mature spec into `execution-plan.json` and `execution-plan.md` for agent execution |
-| `game-design-execution-runner` | Drives one execution-plan task at a time, persists state, prepares bounded worker handoffs or dispatch packets, tracks `dispatch -> ack -> complete`, and enforces a review gate on completion evidence |
+| `game-design-execution-runner` | Drives one execution-plan task at a time, persists state, prepares bounded worker handoffs or dispatch packets, tracks `dispatch -> ack -> complete`, enforces dispatch-bound review gates, and exposes a worker adapter interface |
 
 For topology details, see [docs/skill-catalog.md](docs/skill-catalog.md).
 
@@ -208,5 +210,5 @@ scripts/     Validation helpers
 
 - Version: `v0.3.0`
 - Public repo status: live
-- Validation status: included gameplay package, spec, execution plan, and runner smoke path with dispatch artifacts pass local checks
+- Validation status: included gameplay package, spec, execution plan, and runner smoke path with dispatch review-gate + worker-adapter checks pass local checks
 - Business posture: source-available showcase with commercial licensing path

@@ -216,6 +216,29 @@ This matters because it separates:
 
 Without that split, the runner cannot honestly claim that dispatched work has actually started.
 
+## Dispatch Review Gate
+
+Completion evidence must be tied to the active acknowledged dispatch, not just the task ID.
+
+Minimum checks:
+
+- evidence contains `dispatch_id`
+- evidence contains `worker_label`
+- `dispatch_id` matches the active dispatch in runner state
+- `worker_label` matches the worker that acknowledged the dispatch
+
+This closes the easy failure mode where stale evidence or the wrong worker result is attached to the current task.
+
+## Worker Adapter
+
+The adapter is the external-facing layer above the runner lifecycle:
+
+- it reads `dispatch-manifest.json`
+- it converts dispatch-directory actions into runner state transitions
+- it hides raw `plan-dir` and `task-id` plumbing from external workers
+
+This is the first real interface boundary for future subagents, scripts, or external services.
+
 ## Review Gate
 
 Every completed task should pass a coordinator review gate:

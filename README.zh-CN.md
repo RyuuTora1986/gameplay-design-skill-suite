@@ -39,6 +39,8 @@
 - 用最小 runner 原型按依赖顺序驱动任务执行
 - 输出可落盘的 dispatch 包，而不是假装直接自动拉起 agent
 - 用 `dispatch -> ack -> complete` 把“发任务”和“真正接单执行”拆开
+- 用 dispatch review gate 绑定回执和当前派单，防止串单或旧回执冒充完成
+- 提供 worker adapter，让外部执行者只需要面向 dispatch 目录，不用理解底层 runner 参数
 
 它解决的不是“灵感更多”，而是“从模糊概念到结构化执行”的可靠链路。
 
@@ -67,7 +69,7 @@
 | `gameplay-coding-handoff-compiler` | 把玩法包编译成 scene、UI、object、state、variable 和 prototype acceptance |
 | `game-design-spec` | 将成熟玩法包展开成完整中文游戏规格书与任务包 |
 | `game-design-execution-compiler` | 把成熟 spec 编译成 `execution-plan.json` 和 `execution-plan.md`，供 agent 执行 |
-| `game-design-execution-runner` | 读取 execution plan、持久化 run state、输出受控 handoff 或 dispatch 包，跟踪 `dispatch -> ack -> complete`，并在完成时强制 review gate |
+| `game-design-execution-runner` | 读取 execution plan、持久化 run state、输出受控 handoff 或 dispatch 包，跟踪 `dispatch -> ack -> complete`，在完成时强制 dispatch 级 review gate，并暴露 worker adapter 接口 |
 
 拓扑细节见 [docs/skill-catalog.md](docs/skill-catalog.md)。
 
@@ -208,5 +210,5 @@ scripts/     校验脚本
 
 - 版本：`v0.3.0`
 - 仓库状态：已公开
-- 验证状态：玩法包、规格书、execution plan 以及带 dispatch 产物校验的 runner smoke path 均可通过本地检查
+- 验证状态：玩法包、规格书、execution plan，以及带 dispatch review gate 和 worker adapter 校验的 runner smoke path 均可通过本地检查
 - 商业姿态：公开展示 + 商业授权通道

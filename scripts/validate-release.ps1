@@ -69,11 +69,45 @@ if (-not (Test-Path "$tmpDir\\dispatch-TASK-001\\completion-evidence.template.js
   throw "Dispatch evidence template was not created."
 }
 Invoke-Checked {
-  python "$root\\skills\\game-design-execution-runner\\scripts\\run_execution_plan.py" `
-    ack --plan-dir "$tmpDir" --task-id "TASK-001" --worker-label "smoke-worker"
+  python "$root\\skills\\game-design-execution-runner\\scripts\\worker_adapter.py" `
+    pickup --dispatch-dir "$tmpDir\\dispatch-TASK-001" --worker-label "smoke-worker"
 }
 @'
 {
+  "dispatch_id": "WRONG-DISPATCH-ID",
+  "worker_label": "smoke-worker",
+  "summary": "Invalid attempt that should be rejected by the dispatch review gate.",
+  "changed_files": [
+    "src/ui/hud.tsx"
+  ],
+  "verification_run": [
+    {
+      "name": "npm run typecheck",
+      "result": "pass"
+    },
+    {
+      "name": "browser-check",
+      "result": "pass"
+    }
+  ],
+  "acceptance_checklist": [
+    {
+      "criterion": "HUD renders all required combat regions from the UI task",
+      "status": "met"
+    }
+  ],
+  "open_issues": []
+}
+'@ | Set-Content -Path "$tmpDir\\task-001-invalid-evidence.json" -Encoding utf8
+python "$root\\skills\\game-design-execution-runner\\scripts\\worker_adapter.py" `
+  complete --dispatch-dir "$tmpDir\\dispatch-TASK-001" --evidence-file "$tmpDir\\task-001-invalid-evidence.json"
+if ($LASTEXITCODE -eq 0) {
+  throw "Dispatch review gate accepted invalid dispatch evidence."
+}
+@'
+{
+  "dispatch_id": "TASK-001-dispatch-1",
+  "worker_label": "smoke-worker",
   "summary": "Built the first-pass HUD shell and verified the browser-facing combat layout.",
   "changed_files": [
     "src/ui/hud.tsx"
@@ -110,8 +144,8 @@ Invoke-Checked {
 }
 '@ | Set-Content -Path "$tmpDir\\task-001-evidence.json" -Encoding utf8
 Invoke-Checked {
-  python "$root\\skills\\game-design-execution-runner\\scripts\\run_execution_plan.py" `
-    complete --plan-dir "$tmpDir" --task-id "TASK-001" --evidence-file "$tmpDir\\task-001-evidence.json"
+  python "$root\\skills\\game-design-execution-runner\\scripts\\worker_adapter.py" `
+    complete --dispatch-dir "$tmpDir\\dispatch-TASK-001" --evidence-file "$tmpDir\\task-001-evidence.json"
 }
 Remove-Item -Recurse -Force $tmpDir
 

@@ -61,5 +61,7 @@ Read these before running:
 - `python scripts/run_execution_plan.py start --plan-dir "<dir>" --task-id "TASK-001"`
 - `python scripts/run_execution_plan.py complete --plan-dir "<dir>" --task-id "TASK-001" --evidence-file "<json-file>"`
 - `python scripts/run_execution_plan.py block --plan-dir "<dir>" --task-id "TASK-001" --reason "<reason>"`
+- `python scripts/worker_adapter.py pickup --dispatch-dir "<dir>\\dispatch-TASK-001" --worker-label "<worker-name>"`
+- `python scripts/worker_adapter.py complete --dispatch-dir "<dir>\\dispatch-TASK-001" --evidence-file "<json-file>"`
 
 Use this skill as the control layer between the execution plan and actual coding workers.

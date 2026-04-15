@@ -9,6 +9,8 @@ from typing import Any
 
 STATE_FILE = "execution-run-state.json"
 REQUIRED_EVIDENCE_FIELDS = {
+    "dispatch_id",
+    "worker_label",
     "summary",
     "changed_files",
     "verification_run",
@@ -153,6 +155,7 @@ def build_dispatch_manifest(
         "task_id": task["id"],
         "task_title": task["title"],
         "task_type": task["type"],
+        "dispatch_id": task_entry["dispatch_id"],
         "task_status_before_dispatch": task_entry["status"],
         "attempt_count_before_dispatch": task_entry["attempt_count"],
         "completed_dependencies": payload["completed_dependencies"],
@@ -178,10 +181,28 @@ def build_dispatch_manifest(
                 f'--task-id "{task["id"]}" --reason "<blocked-reason>"'
             ),
         },
+        "adapter_protocol": {
+            "pickup_command": (
+                f'python scripts/worker_adapter.py pickup --dispatch-dir "{output_dir}" '
+                f'--worker-label "<worker-label>"'
+            ),
+            "complete_command": (
+                f'python scripts/worker_adapter.py complete --dispatch-dir "{output_dir}" '
+                f'--evidence-file "<path-to-evidence-json>"'
+            ),
+            "fail_command": (
+                f'python scripts/worker_adapter.py fail --dispatch-dir "{output_dir}" '
+                f'--summary "<failure-summary>"'
+            ),
+            "block_command": (
+                f'python scripts/worker_adapter.py block --dispatch-dir "{output_dir}" '
+                f'--reason "<blocked-reason>"'
+            ),
+        },
     }
 
 
-def build_evidence_template(payload: dict[str, Any]) -> dict[str, Any]:
+def build_evidence_template(payload: dict[str, Any], dispatch_id: str) -> dict[str, Any]:
     verification_template = [
         {"name": item, "result": "not_run"}
         for item in payload["verification"]
@@ -191,6 +212,8 @@ def build_evidence_template(payload: dict[str, Any]) -> dict[str, Any]:
         for item in payload["acceptance_criteria"]
     ]
     return {
+        "dispatch_id": dispatch_id,
+        "worker_label": "<fill-in-worker-label>",
         "summary": f"Complete {payload['task_id']} {payload['title']}",
         "changed_files": ["<fill-in-file-path>"],
         "verification_run": verification_template,
@@ -213,6 +236,10 @@ def validate_evidence(evidence: dict[str, Any]) -> None:
 
     if not isinstance(evidence["changed_files"], list) or not evidence["changed_files"]:
         raise SystemExit("Evidence changed_files must be a non-empty array.")
+    if not isinstance(evidence["dispatch_id"], str) or not evidence["dispatch_id"].strip():
+        raise SystemExit("Evidence dispatch_id must be a non-empty string.")
+    if not isinstance(evidence["worker_label"], str) or not evidence["worker_label"].strip():
+        raise SystemExit("Evidence worker_label must be a non-empty string.")
 
     verification_run = evidence["verification_run"]
     if not isinstance(verification_run, list) or not verification_run:
@@ -303,6 +330,8 @@ def render_handoff_markdown(payload: dict[str, Any]) -> str:
         [
             "",
             "## Completion Evidence Format",
+            "- dispatch_id",
+            "- worker_label",
             "- summary",
             "- changed_files",
             "- verification_run",
@@ -349,17 +378,6 @@ def dispatch_task(
     resolved_output_dir = output_dir or (plan_dir / f"dispatch-{task['id'].lower()}")
     resolved_output_dir.mkdir(parents=True, exist_ok=True)
 
-    manifest = build_dispatch_manifest(task, payload, state, resolved_output_dir)
-    write_json(resolved_output_dir / DISPATCH_FILES["manifest"], manifest)
-    write_json(resolved_output_dir / DISPATCH_FILES["payload"], payload)
-    (resolved_output_dir / DISPATCH_FILES["handoff"]).write_text(
-        render_handoff_markdown(payload) + "\n", encoding="utf-8"
-    )
-    write_json(
-        resolved_output_dir / DISPATCH_FILES["evidence_template"],
-        build_evidence_template(payload),
-    )
-
     entry = get_task_entry(state, task["id"])
     if entry["status"] not in {"pending", "failed"}:
         raise SystemExit(
@@ -382,6 +400,17 @@ def dispatch_task(
         entry["attempt_count"] += 1
     else:
         entry["status"] = "dispatched"
+
+    manifest = build_dispatch_manifest(task, payload, state, resolved_output_dir)
+    write_json(resolved_output_dir / DISPATCH_FILES["manifest"], manifest)
+    write_json(resolved_output_dir / DISPATCH_FILES["payload"], payload)
+    (resolved_output_dir / DISPATCH_FILES["handoff"]).write_text(
+        render_handoff_markdown(payload) + "\n", encoding="utf-8"
+    )
+    write_json(
+        resolved_output_dir / DISPATCH_FILES["evidence_template"],
+        build_evidence_template(payload, dispatch_id),
+    )
     write_json(state_file, state)
 
     result = {
@@ -452,6 +481,16 @@ def update_task_status(
             raise SystemExit(f"{task_id} must be in running state before completion.")
         if verification is None:
             raise SystemExit("Completion requires structured verification evidence.")
+        if entry["dispatch_status"] != "acknowledged":
+            raise SystemExit(f"{task_id} must be acknowledged before completion.")
+        if verification["dispatch_id"] != entry["dispatch_id"]:
+            raise SystemExit(
+                f"Evidence dispatch_id {verification['dispatch_id']} does not match active dispatch {entry['dispatch_id']}."
+            )
+        if verification["worker_label"] != entry["worker_label"]:
+            raise SystemExit(
+                f"Evidence worker_label {verification['worker_label']} does not match active worker {entry['worker_label']}."
+            )
     elif status == "running":
         if entry["status"] not in {"pending", "failed", "dispatched"}:
             raise SystemExit(f"{task_id} cannot enter running from {entry['status']}.")
