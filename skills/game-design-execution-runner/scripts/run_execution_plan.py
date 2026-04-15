@@ -7,10 +7,17 @@ from typing import Any
 
 
 STATE_FILE = "execution-run-state.json"
+REQUIRED_EVIDENCE_FIELDS = {
+    "summary",
+    "changed_files",
+    "verification_run",
+    "acceptance_checklist",
+    "open_issues",
+}
 
 
 def read_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def write_json(path: Path, data: dict[str, Any]) -> None:
@@ -97,6 +104,45 @@ def build_payload(task: dict[str, Any], state: dict[str, Any]) -> dict[str, Any]
     }
 
 
+def find_task(plan: dict[str, Any], task_id: str) -> dict[str, Any]:
+    for task in plan["tasks"]:
+        if task["id"] == task_id:
+            return task
+    raise SystemExit(f"Unknown task id: {task_id}")
+
+
+def validate_evidence(evidence: dict[str, Any]) -> None:
+    missing = REQUIRED_EVIDENCE_FIELDS - set(evidence)
+    if missing:
+        raise SystemExit(f"Evidence missing fields: {', '.join(sorted(missing))}")
+
+    if not isinstance(evidence["changed_files"], list) or not evidence["changed_files"]:
+        raise SystemExit("Evidence changed_files must be a non-empty array.")
+
+    verification_run = evidence["verification_run"]
+    if not isinstance(verification_run, list) or not verification_run:
+        raise SystemExit("Evidence verification_run must be a non-empty array.")
+    if all(item.get("result") == "not_run" for item in verification_run if isinstance(item, dict)):
+        raise SystemExit("Evidence verification_run cannot be all not_run.")
+
+    acceptance_checklist = evidence["acceptance_checklist"]
+    if not isinstance(acceptance_checklist, list) or not acceptance_checklist:
+        raise SystemExit("Evidence acceptance_checklist must be a non-empty array.")
+    for item in acceptance_checklist:
+        if not isinstance(item, dict):
+            raise SystemExit("Each acceptance checklist item must be an object.")
+        if item.get("status") == "not_met":
+            raise SystemExit("Cannot complete task with acceptance status not_met.")
+
+
+def load_evidence(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        raise SystemExit(f"Missing evidence file: {path}")
+    evidence = read_json(path)
+    validate_evidence(evidence)
+    return evidence
+
+
 def next_task(plan_dir: Path, output_format: str) -> int:
     plan, state, _ = load_plan_and_state(plan_dir)
     runnable = next((task for task in plan["tasks"] if is_runnable(task, state)), None)
@@ -134,32 +180,100 @@ def next_task(plan_dir: Path, output_format: str) -> int:
     return 0
 
 
+def render_handoff(payload: dict[str, Any], output_format: str) -> int:
+    if output_format == "json":
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
+
+    print(f"# Worker Handoff: {payload['task_id']} {payload['title']}")
+    print("")
+    print("## Scope")
+    print(f"- Type: {payload['type']}")
+    print(f"- Completed dependencies: {', '.join(payload['completed_dependencies']) or 'none'}")
+    print(f"- Source refs: {', '.join(payload['source_refs'])}")
+    print(f"- Canonical IDs: {', '.join(payload['canonical_ids']) or 'none'}")
+    print(f"- Goal: {payload['goal']}")
+    print("")
+    print("## Deliverables")
+    for item in payload["deliverables"]:
+        print(f"- {item}")
+    print("")
+    print("## Acceptance Criteria")
+    for item in payload["acceptance_criteria"]:
+        print(f"- {item}")
+    print("")
+    print("## Verification")
+    for item in payload["verification"]:
+        print(f"- {item}")
+    print("")
+    print("## Notes")
+    for item in payload["notes"]:
+        print(f"- {item}")
+    print("")
+    print("## Worker Rules")
+    for item in payload["worker_rules"]:
+        print(f"- {item}")
+    print("")
+    print("## Completion Evidence Format")
+    print("- summary")
+    print("- changed_files")
+    print("- verification_run")
+    print("- acceptance_checklist")
+    print("- open_issues")
+    return 0
+
+
+def handoff_task(plan_dir: Path, task_id: str | None, output_format: str) -> int:
+    plan, state, _ = load_plan_and_state(plan_dir)
+    task = find_task(plan, task_id) if task_id else next((item for item in plan["tasks"] if is_runnable(item, state)), None)
+    if task is None:
+        print("No runnable task found.")
+        return 0
+    payload = build_payload(task, state)
+    return render_handoff(payload, output_format)
+
+
 def update_task_status(
     plan_dir: Path,
     task_id: str,
     status: str,
     summary: str = "",
-    verification: str = "",
+    verification: Any = None,
     reason: str = "",
 ) -> int:
-    _, state, state_file = load_plan_and_state(plan_dir)
+    plan, state, state_file = load_plan_and_state(plan_dir)
     if task_id not in state["tasks"]:
         raise SystemExit(f"Unknown task id: {task_id}")
 
+    task = find_task(plan, task_id)
     entry = state["tasks"][task_id]
+
+    if status == "completed":
+        if entry["status"] != "running":
+            raise SystemExit(f"{task_id} must be in running state before completion.")
+        if verification is None:
+            raise SystemExit("Completion requires structured verification evidence.")
+
     entry["status"] = status
     if status in {"running", "failed", "blocked"}:
         entry["attempt_count"] += 1
     if summary:
         entry["last_summary"] = summary
-    if verification:
+    if verification is not None:
         entry["verification_evidence"].append(verification)
+        entry["last_summary"] = verification["summary"]
     if reason:
         entry["blocked_reason"] = reason
     elif status != "blocked":
         entry["blocked_reason"] = ""
 
     if status == "completed":
+        if task["type"] == "ui":
+            verification_names = " ".join(
+                item.get("name", "") for item in verification["verification_run"] if isinstance(item, dict)
+            ).lower()
+            if "browser" not in verification_names:
+                raise SystemExit("UI completion evidence must include a browser verification entry.")
         state["last_completed_task"] = task_id
 
     write_json(state_file, state)
@@ -196,6 +310,11 @@ def main() -> int:
     next_parser.add_argument("--plan-dir", required=True)
     next_parser.add_argument("--format", choices=["markdown", "json"], default="markdown")
 
+    handoff_parser = subparsers.add_parser("handoff")
+    handoff_parser.add_argument("--plan-dir", required=True)
+    handoff_parser.add_argument("--task-id")
+    handoff_parser.add_argument("--format", choices=["markdown", "json"], default="markdown")
+
     start_parser = subparsers.add_parser("start")
     start_parser.add_argument("--plan-dir", required=True)
     start_parser.add_argument("--task-id", required=True)
@@ -203,8 +322,7 @@ def main() -> int:
     complete_parser = subparsers.add_parser("complete")
     complete_parser.add_argument("--plan-dir", required=True)
     complete_parser.add_argument("--task-id", required=True)
-    complete_parser.add_argument("--summary", required=True)
-    complete_parser.add_argument("--verification", required=True)
+    complete_parser.add_argument("--evidence-file", required=True)
 
     block_parser = subparsers.add_parser("block")
     block_parser.add_argument("--plan-dir", required=True)
@@ -225,11 +343,14 @@ def main() -> int:
         return print_status(plan_dir)
     if args.command == "next":
         return next_task(plan_dir, args.format)
+    if args.command == "handoff":
+        return handoff_task(plan_dir, args.task_id, args.format)
     if args.command == "start":
         return update_task_status(plan_dir, args.task_id, "running")
     if args.command == "complete":
+        evidence = load_evidence(Path(args.evidence_file))
         return update_task_status(
-            plan_dir, args.task_id, "completed", summary=args.summary, verification=args.verification
+            plan_dir, args.task_id, "completed", verification=evidence
         )
     if args.command == "block":
         return update_task_status(plan_dir, args.task_id, "blocked", reason=args.reason)

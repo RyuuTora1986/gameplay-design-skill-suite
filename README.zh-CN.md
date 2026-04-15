@@ -65,7 +65,7 @@
 | `gameplay-coding-handoff-compiler` | 把玩法包编译成 scene、UI、object、state、variable 和 prototype acceptance |
 | `game-design-spec` | 将成熟玩法包展开成完整中文游戏规格书与任务包 |
 | `game-design-execution-compiler` | 把成熟 spec 编译成 `execution-plan.json` 和 `execution-plan.md`，供 agent 执行 |
-| `game-design-execution-runner` | 读取 execution plan、持久化 run state，并一次交付一个受控任务给 worker |
+| `game-design-execution-runner` | 读取 execution plan、持久化 run state、输出受控 handoff，并在完成时强制 review gate |
 
 拓扑细节见 [docs/skill-catalog.md](docs/skill-catalog.md)。
 

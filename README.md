@@ -63,7 +63,7 @@ Most public prompt packs for game design fail in one of three ways:
 | `gameplay-coding-handoff-compiler` | Compiles the locked package into scenes, UI, objects, states, variables, and prototype acceptance |
 | `game-design-spec` | Expands the mature gameplay package into a full Chinese game design spec and task pack |
 | `game-design-execution-compiler` | Compiles the mature spec into `execution-plan.json` and `execution-plan.md` for agent execution |
-| `game-design-execution-runner` | Drives one execution-plan task at a time, persists state, and prepares bounded worker handoffs |
+| `game-design-execution-runner` | Drives one execution-plan task at a time, persists state, prepares bounded worker handoffs, and enforces a review gate on completion evidence |
 
 For topology details, see [docs/skill-catalog.md](docs/skill-catalog.md).
 

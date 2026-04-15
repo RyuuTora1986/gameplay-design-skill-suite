@@ -26,6 +26,49 @@ python "$root\\skills\\game-design-execution-runner\\scripts\\run_execution_plan
   init --plan-dir "$tmpDir" --repo-root "$root" --branch "main"
 python "$root\\skills\\game-design-execution-runner\\scripts\\run_execution_plan.py" `
   next --plan-dir "$tmpDir" --format json
+python "$root\\skills\\game-design-execution-runner\\scripts\\run_execution_plan.py" `
+  handoff --plan-dir "$tmpDir" --format markdown
+python "$root\\skills\\game-design-execution-runner\\scripts\\run_execution_plan.py" `
+  start --plan-dir "$tmpDir" --task-id "TASK-001"
+@'
+{
+  "summary": "Built the first-pass HUD shell and verified the browser-facing combat layout.",
+  "changed_files": [
+    "src/ui/hud.tsx"
+  ],
+  "verification_run": [
+    {
+      "name": "npm run typecheck",
+      "result": "pass"
+    },
+    {
+      "name": "browser-check",
+      "result": "pass"
+    }
+  ],
+  "acceptance_checklist": [
+    {
+      "criterion": "HUD renders all required combat regions from the UI task",
+      "status": "met"
+    },
+    {
+      "criterion": "No approved HUD region is silently omitted",
+      "status": "met"
+    },
+    {
+      "criterion": "Typecheck passes",
+      "status": "met"
+    },
+    {
+      "criterion": "Browser verification passes",
+      "status": "met"
+    }
+  ],
+  "open_issues": []
+}
+'@ | Set-Content -Path "$tmpDir\\task-001-evidence.json" -Encoding utf8
+python "$root\\skills\\game-design-execution-runner\\scripts\\run_execution_plan.py" `
+  complete --plan-dir "$tmpDir" --task-id "TASK-001" --evidence-file "$tmpDir\\task-001-evidence.json"
 Remove-Item -Recurse -Force $tmpDir
 
 Write-Host "Validation complete."

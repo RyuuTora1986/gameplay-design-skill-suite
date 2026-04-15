@@ -40,7 +40,7 @@ The runner should do exactly these things:
 1. Load `execution-plan.json`
 2. Select the next runnable task whose dependencies are satisfied
 3. Build a bounded task prompt for a coding worker
-4. Require the worker to report verification evidence
+4. Require the worker to report structured verification evidence
 5. Mark the task as complete, failed, or blocked
 6. Persist run state so the chain can resume after interruption
 
@@ -177,6 +177,8 @@ Every completed task should pass a coordinator review gate:
 4. Did the worker introduce drift against canonical IDs or source refs?
 
 If not, the task returns to `failed` or `blocked`, not `completed`.
+
+The current prototype now enforces this through structured evidence on `complete`, rather than a plain free-text summary.
 
 ## Future Skill Candidates
 

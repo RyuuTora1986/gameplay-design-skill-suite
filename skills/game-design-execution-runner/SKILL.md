@@ -29,6 +29,7 @@ Drive one bounded execution task at a time from `execution-plan.json`, persist p
 Read these before running:
 - [references/state-model.md](references/state-model.md)
 - [references/worker-prompt-contract.md](references/worker-prompt-contract.md)
+- [references/review-gate.md](references/review-gate.md)
 
 ## Operating Model
 
@@ -52,8 +53,9 @@ Read these before running:
 - `python scripts/run_execution_plan.py init --plan-dir "<dir>" --repo-root "<repo>" --branch "<branch>"`
 - `python scripts/run_execution_plan.py status --plan-dir "<dir>"`
 - `python scripts/run_execution_plan.py next --plan-dir "<dir>" --format markdown`
+- `python scripts/run_execution_plan.py handoff --plan-dir "<dir>" --task-id "TASK-001" --format markdown`
 - `python scripts/run_execution_plan.py start --plan-dir "<dir>" --task-id "TASK-001"`
-- `python scripts/run_execution_plan.py complete --plan-dir "<dir>" --task-id "TASK-001" --summary "<summary>" --verification "<evidence>"`
+- `python scripts/run_execution_plan.py complete --plan-dir "<dir>" --task-id "TASK-001" --evidence-file "<json-file>"`
 - `python scripts/run_execution_plan.py block --plan-dir "<dir>" --task-id "TASK-001" --reason "<reason>"`
 
 Use this skill as the control layer between the execution plan and actual coding workers.

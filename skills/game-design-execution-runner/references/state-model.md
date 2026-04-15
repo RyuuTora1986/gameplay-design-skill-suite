@@ -32,3 +32,15 @@ Each task entry must include:
 ## Persistence Rule
 
 The runner must write state after every transition so the chain can resume after interruption.
+
+## Evidence Shape
+
+`verification_evidence` should be an array of structured evidence objects rather than plain strings.
+
+Each evidence object should contain:
+
+- `summary`
+- `changed_files`
+- `verification_run`
+- `acceptance_checklist`
+- `open_issues`
