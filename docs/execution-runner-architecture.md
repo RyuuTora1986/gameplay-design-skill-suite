@@ -43,6 +43,7 @@ The runner should do exactly these things:
 4. Require the worker to report structured verification evidence
 5. Mark the task as complete, failed, or blocked
 6. Persist run state so the chain can resume after interruption
+7. Optionally emit a stable dispatch package for file-based worker handoff
 
 The runner should not:
 
@@ -167,6 +168,31 @@ The runner should also instruct the worker:
 - report exactly what was changed
 - report verification evidence before claiming completion
 
+## Dispatch Boundary
+
+The runner now needs two output shapes:
+
+### 1. `handoff`
+
+- inline worker-facing markdown or JSON
+- useful inside one supervised Codex thread
+- no filesystem bundle required
+
+### 2. `dispatch`
+
+- file-based worker packet written to a dispatch directory
+- intended for subagent handoff, runner-managed execution, or later external automation
+- keeps the execution-plan contract stable while making downstream execution more operational
+
+Recommended dispatch artifacts:
+
+- `dispatch-manifest.json`
+- `task-payload.json`
+- `worker-handoff.md`
+- `completion-evidence.template.json`
+
+This is intentionally not a fake native agent launcher. It is the honest boundary that makes real automation possible later.
+
 ## Review Gate
 
 Every completed task should pass a coordinator review gate:
@@ -201,7 +227,7 @@ The smallest useful version should support:
 
 - loading one execution plan
 - selecting the next task by dependency order
-- dispatching one worker at a time
+- dispatching one worker at a time through a stable packet
 - recording completion state
 - stopping on first failure
 

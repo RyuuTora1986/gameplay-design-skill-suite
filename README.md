@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>Orchestrator-first Codex skills for turning raw game ideas into validated gameplay packages, Chinese production-ready game specs, and agent-executable execution plans.</strong>
+  <strong>Orchestrator-first Codex skills for turning raw game ideas into validated gameplay packages, Chinese production-ready game specs, agent-executable execution plans, and dispatch-ready worker packets.</strong>
 </p>
 
 <p align="center">
@@ -35,6 +35,7 @@ Instead of exposing ten unrelated prompts and hoping the user manually glues the
 - expands that package into a full Chinese game spec when needed
 - compiles that spec into an execution plan for agent-driven implementation
 - includes a first runner prototype for stepping through that execution plan
+- includes a dispatch layer that emits stable worker packets instead of pretending to auto-launch agents
 
 The result is not just "better ideation." It is a more reliable bridge from vague concept to structured execution.
 
@@ -63,7 +64,7 @@ Most public prompt packs for game design fail in one of three ways:
 | `gameplay-coding-handoff-compiler` | Compiles the locked package into scenes, UI, objects, states, variables, and prototype acceptance |
 | `game-design-spec` | Expands the mature gameplay package into a full Chinese game design spec and task pack |
 | `game-design-execution-compiler` | Compiles the mature spec into `execution-plan.json` and `execution-plan.md` for agent execution |
-| `game-design-execution-runner` | Drives one execution-plan task at a time, persists state, prepares bounded worker handoffs, and enforces a review gate on completion evidence |
+| `game-design-execution-runner` | Drives one execution-plan task at a time, persists state, prepares bounded worker handoffs or dispatch packets, and enforces a review gate on completion evidence |
 
 For topology details, see [docs/skill-catalog.md](docs/skill-catalog.md).
 
@@ -84,7 +85,7 @@ Raw game idea
   -> game-design-execution-compiler
   -> execution-plan.json + execution-plan.md
   -> game-design-execution-runner
-  -> execution-run-state.json + worker handoff
+  -> execution-run-state.json + worker handoff / dispatch packet
 ```
 
 Operational rules:
@@ -110,7 +111,7 @@ The example package includes:
 - a gameplay package with assumption list, system indexes, formulas, and prototype acceptance
 - a full spec with system rules, UI tasking, balance tasks, art/audio constraints, QA, and delivery mapping
 - an execution plan with small dependency-aware tasks tied back to source refs and canonical IDs
-- a runner-ready path that can initialize state and step through tasks in dependency order
+- a runner-ready path that can initialize state, emit worker dispatch packets, and step through tasks in dependency order
 
 This is not a fake sample or a one-page teaser. It is a shipped validation artifact.
 
@@ -206,5 +207,5 @@ scripts/     Validation helpers
 
 - Version: `v0.3.0`
 - Public repo status: live
-- Validation status: included gameplay package, spec, execution plan, and runner smoke path pass local checks
+- Validation status: included gameplay package, spec, execution plan, and runner smoke path with dispatch artifacts pass local checks
 - Business posture: source-available showcase with commercial licensing path

@@ -18,8 +18,9 @@ The chain now covers:
 ## Highlights
 
 - added `game-design-execution-runner`
-- added a minimal `run_execution_plan.py` runtime for `init / status / next / start / complete / block / fail`
+- added a minimal `run_execution_plan.py` runtime for `init / status / next / handoff / dispatch / start / complete / block / fail`
 - added persisted `execution-run-state.json` flow for resumable execution
+- added file-based dispatch packets for bounded worker handoff
 - updated public docs to present the suite as a design-to-execution operating chain
 
 ## Why This Matters

@@ -20,6 +20,7 @@ Each task entry must include:
 - `last_summary`
 - `verification_evidence`
 - `blocked_reason`
+- `last_dispatch_dir`
 
 ## Allowed Status Values
 
@@ -44,3 +45,13 @@ Each evidence object should contain:
 - `verification_run`
 - `acceptance_checklist`
 - `open_issues`
+
+## Dispatch Tracking
+
+`last_dispatch_dir` should record the latest dispatch artifact directory generated for the task.
+
+This makes the runner resumable across:
+
+- interrupted worker handoff
+- manual supervisor review
+- later external dispatch automation

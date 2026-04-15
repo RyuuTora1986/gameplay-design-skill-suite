@@ -156,11 +156,13 @@ This layer consumes `execution-plan.json`, persists `execution-run-state.json`, 
 - Output:
   - `execution-run-state.json`
   - one bounded worker handoff at a time
+  - one dispatch-ready worker packet at a time
 - Main value:
   - picks the next runnable task
   - persists run state after every transition
   - stops task sprawl by enforcing one-task scope
   - creates a stable bridge into subagent or coding-worker execution
+  - exposes an honest file-based dispatch boundary for later automation
 
 ## Public Demo Priorities
 

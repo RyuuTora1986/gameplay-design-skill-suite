@@ -22,7 +22,7 @@ This skill is the runtime coordinator for the plan, not the planner.
 
 ## Goal
 
-Drive one bounded execution task at a time from `execution-plan.json`, persist progress in `execution-run-state.json`, and prepare worker-facing prompts without expanding scope.
+Drive one bounded execution task at a time from `execution-plan.json`, persist progress in `execution-run-state.json`, and prepare either inline worker prompts or dispatch-ready worker packets without expanding scope.
 
 ## Required References
 
@@ -37,6 +37,7 @@ Read these before running:
 - Load or initialize the run state.
 - Pick the next runnable task whose dependencies are completed.
 - Present only the bounded task payload to the worker.
+- When needed, emit a dispatch package that can be handed to a worker or a later automation layer.
 - Require verification evidence before marking the task complete.
 - Persist state after every transition.
 
@@ -54,6 +55,7 @@ Read these before running:
 - `python scripts/run_execution_plan.py status --plan-dir "<dir>"`
 - `python scripts/run_execution_plan.py next --plan-dir "<dir>" --format markdown`
 - `python scripts/run_execution_plan.py handoff --plan-dir "<dir>" --task-id "TASK-001" --format markdown`
+- `python scripts/run_execution_plan.py dispatch --plan-dir "<dir>" --task-id "TASK-001" --output-dir "<dir>\\dispatch-TASK-001"`
 - `python scripts/run_execution_plan.py start --plan-dir "<dir>" --task-id "TASK-001"`
 - `python scripts/run_execution_plan.py complete --plan-dir "<dir>" --task-id "TASK-001" --evidence-file "<json-file>"`
 - `python scripts/run_execution_plan.py block --plan-dir "<dir>" --task-id "TASK-001" --reason "<reason>"`

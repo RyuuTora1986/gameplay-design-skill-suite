@@ -14,6 +14,12 @@ REQUIRED_EVIDENCE_FIELDS = {
     "acceptance_checklist",
     "open_issues",
 }
+DISPATCH_FILES = {
+    "manifest": "dispatch-manifest.json",
+    "payload": "task-payload.json",
+    "handoff": "worker-handoff.md",
+    "evidence_template": "completion-evidence.template.json",
+}
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -42,6 +48,7 @@ def init_state(plan_dir: Path, repo_root: str, branch: str) -> int:
             "last_summary": "",
             "verification_evidence": [],
             "blocked_reason": "",
+            "last_dispatch_dir": "",
         }
         for task in plan["tasks"]
     }
@@ -68,13 +75,24 @@ def load_plan_and_state(plan_dir: Path) -> tuple[dict[str, Any], dict[str, Any],
 
 
 def is_runnable(task: dict[str, Any], state: dict[str, Any]) -> bool:
-    task_state = state["tasks"][task["id"]]["status"]
+    task_state = get_task_entry(state, task["id"])["status"]
     if task_state not in {"pending", "failed"}:
         return False
     for dependency in task["depends_on"]:
         if state["tasks"][dependency]["status"] != "completed":
             return False
     return True
+
+
+def get_task_entry(state: dict[str, Any], task_id: str) -> dict[str, Any]:
+    entry = state["tasks"][task_id]
+    entry.setdefault("status", "pending")
+    entry.setdefault("attempt_count", 0)
+    entry.setdefault("last_summary", "")
+    entry.setdefault("verification_evidence", [])
+    entry.setdefault("blocked_reason", "")
+    entry.setdefault("last_dispatch_dir", "")
+    return entry
 
 
 def build_payload(task: dict[str, Any], state: dict[str, Any]) -> dict[str, Any]:
@@ -101,6 +119,66 @@ def build_payload(task: dict[str, Any], state: dict[str, Any]) -> dict[str, Any]
             "Report changed files explicitly.",
             "Report verification evidence before claiming completion.",
         ],
+    }
+
+
+def build_dispatch_manifest(
+    task: dict[str, Any],
+    payload: dict[str, Any],
+    state: dict[str, Any],
+    output_dir: Path,
+) -> dict[str, Any]:
+    task_entry = get_task_entry(state, task["id"])
+    return {
+        "plan_file": state["plan_file"],
+        "repo_root": state["repo_root"],
+        "branch": state["branch"],
+        "task_id": task["id"],
+        "task_title": task["title"],
+        "task_type": task["type"],
+        "task_status_before_dispatch": task_entry["status"],
+        "attempt_count_before_dispatch": task_entry["attempt_count"],
+        "completed_dependencies": payload["completed_dependencies"],
+        "dispatch_files": {
+            name: str(output_dir / filename)
+            for name, filename in DISPATCH_FILES.items()
+        },
+        "completion_protocol": {
+            "start_command": (
+                f'python scripts/run_execution_plan.py start --plan-dir "{Path(state["plan_file"]).parent}" '
+                f'--task-id "{task["id"]}"'
+            ),
+            "complete_command": (
+                f'python scripts/run_execution_plan.py complete --plan-dir "{Path(state["plan_file"]).parent}" '
+                f'--task-id "{task["id"]}" --evidence-file "<path-to-evidence-json>"'
+            ),
+            "fail_command": (
+                f'python scripts/run_execution_plan.py fail --plan-dir "{Path(state["plan_file"]).parent}" '
+                f'--task-id "{task["id"]}" --summary "<failure-summary>"'
+            ),
+            "block_command": (
+                f'python scripts/run_execution_plan.py block --plan-dir "{Path(state["plan_file"]).parent}" '
+                f'--task-id "{task["id"]}" --reason "<blocked-reason>"'
+            ),
+        },
+    }
+
+
+def build_evidence_template(payload: dict[str, Any]) -> dict[str, Any]:
+    verification_template = [
+        {"name": item, "result": "not_run"}
+        for item in payload["verification"]
+    ]
+    acceptance_template = [
+        {"criterion": item, "status": "partial"}
+        for item in payload["acceptance_criteria"]
+    ]
+    return {
+        "summary": f"Complete {payload['task_id']} {payload['title']}",
+        "changed_files": ["<fill-in-file-path>"],
+        "verification_run": verification_template,
+        "acceptance_checklist": acceptance_template,
+        "open_issues": ["<fill-in-open-issue-or-remove-if-none>"],
     }
 
 
@@ -155,29 +233,67 @@ def next_task(plan_dir: Path, output_format: str) -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
 
-    print(f"# {payload['task_id']} {payload['title']}")
-    print("")
-    print(f"- Type: {payload['type']}")
-    print(f"- Completed dependencies: {', '.join(payload['completed_dependencies']) or 'none'}")
-    print(f"- Source refs: {', '.join(payload['source_refs'])}")
-    print(f"- Canonical IDs: {', '.join(payload['canonical_ids']) or 'none'}")
-    print(f"- Goal: {payload['goal']}")
-    print("- Deliverables:")
-    for item in payload["deliverables"]:
-        print(f"  - {item}")
-    print("- Acceptance criteria:")
-    for item in payload["acceptance_criteria"]:
-        print(f"  - {item}")
-    print("- Verification:")
-    for item in payload["verification"]:
-        print(f"  - {item}")
-    print("- Notes:")
-    for item in payload["notes"]:
-        print(f"  - {item}")
-    print("- Worker rules:")
-    for item in payload["worker_rules"]:
-        print(f"  - {item}")
+    print(render_payload_markdown(payload))
     return 0
+
+
+def render_payload_markdown(payload: dict[str, Any]) -> str:
+    lines = [
+        f"# {payload['task_id']} {payload['title']}",
+        "",
+        f"- Type: {payload['type']}",
+        f"- Completed dependencies: {', '.join(payload['completed_dependencies']) or 'none'}",
+        f"- Source refs: {', '.join(payload['source_refs'])}",
+        f"- Canonical IDs: {', '.join(payload['canonical_ids']) or 'none'}",
+        f"- Goal: {payload['goal']}",
+        "- Deliverables:",
+    ]
+    lines.extend(f"  - {item}" for item in payload["deliverables"])
+    lines.append("- Acceptance criteria:")
+    lines.extend(f"  - {item}" for item in payload["acceptance_criteria"])
+    lines.append("- Verification:")
+    lines.extend(f"  - {item}" for item in payload["verification"])
+    lines.append("- Notes:")
+    lines.extend(f"  - {item}" for item in payload["notes"])
+    lines.append("- Worker rules:")
+    lines.extend(f"  - {item}" for item in payload["worker_rules"])
+    return "\n".join(lines)
+
+
+def render_handoff_markdown(payload: dict[str, Any]) -> str:
+    lines = [
+        f"# Worker Handoff: {payload['task_id']} {payload['title']}",
+        "",
+        "## Scope",
+        f"- Type: {payload['type']}",
+        f"- Completed dependencies: {', '.join(payload['completed_dependencies']) or 'none'}",
+        f"- Source refs: {', '.join(payload['source_refs'])}",
+        f"- Canonical IDs: {', '.join(payload['canonical_ids']) or 'none'}",
+        f"- Goal: {payload['goal']}",
+        "",
+        "## Deliverables",
+    ]
+    lines.extend(f"- {item}" for item in payload["deliverables"])
+    lines.extend(["", "## Acceptance Criteria"])
+    lines.extend(f"- {item}" for item in payload["acceptance_criteria"])
+    lines.extend(["", "## Verification"])
+    lines.extend(f"- {item}" for item in payload["verification"])
+    lines.extend(["", "## Notes"])
+    lines.extend(f"- {item}" for item in payload["notes"])
+    lines.extend(["", "## Worker Rules"])
+    lines.extend(f"- {item}" for item in payload["worker_rules"])
+    lines.extend(
+        [
+            "",
+            "## Completion Evidence Format",
+            "- summary",
+            "- changed_files",
+            "- verification_run",
+            "- acceptance_checklist",
+            "- open_issues",
+        ]
+    )
+    return "\n".join(lines)
 
 
 def render_handoff(payload: dict[str, Any], output_format: str) -> int:
@@ -185,41 +301,7 @@ def render_handoff(payload: dict[str, Any], output_format: str) -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
 
-    print(f"# Worker Handoff: {payload['task_id']} {payload['title']}")
-    print("")
-    print("## Scope")
-    print(f"- Type: {payload['type']}")
-    print(f"- Completed dependencies: {', '.join(payload['completed_dependencies']) or 'none'}")
-    print(f"- Source refs: {', '.join(payload['source_refs'])}")
-    print(f"- Canonical IDs: {', '.join(payload['canonical_ids']) or 'none'}")
-    print(f"- Goal: {payload['goal']}")
-    print("")
-    print("## Deliverables")
-    for item in payload["deliverables"]:
-        print(f"- {item}")
-    print("")
-    print("## Acceptance Criteria")
-    for item in payload["acceptance_criteria"]:
-        print(f"- {item}")
-    print("")
-    print("## Verification")
-    for item in payload["verification"]:
-        print(f"- {item}")
-    print("")
-    print("## Notes")
-    for item in payload["notes"]:
-        print(f"- {item}")
-    print("")
-    print("## Worker Rules")
-    for item in payload["worker_rules"]:
-        print(f"- {item}")
-    print("")
-    print("## Completion Evidence Format")
-    print("- summary")
-    print("- changed_files")
-    print("- verification_run")
-    print("- acceptance_checklist")
-    print("- open_issues")
+    print(render_handoff_markdown(payload))
     return 0
 
 
@@ -231,6 +313,67 @@ def handoff_task(plan_dir: Path, task_id: str | None, output_format: str) -> int
         return 0
     payload = build_payload(task, state)
     return render_handoff(payload, output_format)
+
+
+def dispatch_task(
+    plan_dir: Path,
+    task_id: str | None,
+    output_dir: Path | None,
+    output_format: str,
+    mark_running: bool,
+) -> int:
+    plan, state, state_file = load_plan_and_state(plan_dir)
+    task = find_task(plan, task_id) if task_id else next((item for item in plan["tasks"] if is_runnable(item, state)), None)
+    if task is None:
+        print("No runnable task found.")
+        return 0
+
+    payload = build_payload(task, state)
+    resolved_output_dir = output_dir or (plan_dir / f"dispatch-{task['id'].lower()}")
+    resolved_output_dir.mkdir(parents=True, exist_ok=True)
+
+    manifest = build_dispatch_manifest(task, payload, state, resolved_output_dir)
+    write_json(resolved_output_dir / DISPATCH_FILES["manifest"], manifest)
+    write_json(resolved_output_dir / DISPATCH_FILES["payload"], payload)
+    (resolved_output_dir / DISPATCH_FILES["handoff"]).write_text(
+        render_handoff_markdown(payload) + "\n", encoding="utf-8"
+    )
+    write_json(
+        resolved_output_dir / DISPATCH_FILES["evidence_template"],
+        build_evidence_template(payload),
+    )
+
+    entry = get_task_entry(state, task["id"])
+    entry["last_dispatch_dir"] = str(resolved_output_dir)
+    if mark_running:
+        if entry["status"] not in {"pending", "failed"}:
+            raise SystemExit(
+                f"{task['id']} cannot be marked running from state {entry['status']}."
+            )
+        entry["status"] = "running"
+        entry["attempt_count"] += 1
+    write_json(state_file, state)
+
+    result = {
+        "task_id": task["id"],
+        "output_dir": str(resolved_output_dir),
+        "files": {
+            name: str(resolved_output_dir / filename)
+            for name, filename in DISPATCH_FILES.items()
+        },
+        "marked_running": mark_running,
+    }
+
+    if output_format == "json":
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0
+
+    print(f"Dispatched {task['id']} -> {resolved_output_dir}")
+    for name, path in result["files"].items():
+        print(f"- {name}: {path}")
+    if mark_running:
+        print("- state: running")
+    return 0
 
 
 def update_task_status(
@@ -247,6 +390,7 @@ def update_task_status(
 
     task = find_task(plan, task_id)
     entry = state["tasks"][task_id]
+    entry = get_task_entry(state, task_id)
 
     if status == "completed":
         if entry["status"] != "running":
@@ -289,7 +433,7 @@ def print_status(plan_dir: Path) -> int:
     print(f"Last completed task: {state['last_completed_task'] or 'none'}")
     print("")
     for task in plan["tasks"]:
-        entry = state["tasks"][task["id"]]
+        entry = get_task_entry(state, task["id"])
         print(f"{task['id']} [{entry['status']}] {task['title']}")
     return 0
 
@@ -314,6 +458,13 @@ def main() -> int:
     handoff_parser.add_argument("--plan-dir", required=True)
     handoff_parser.add_argument("--task-id")
     handoff_parser.add_argument("--format", choices=["markdown", "json"], default="markdown")
+
+    dispatch_parser = subparsers.add_parser("dispatch")
+    dispatch_parser.add_argument("--plan-dir", required=True)
+    dispatch_parser.add_argument("--task-id")
+    dispatch_parser.add_argument("--output-dir")
+    dispatch_parser.add_argument("--format", choices=["markdown", "json"], default="markdown")
+    dispatch_parser.add_argument("--mark-running", action="store_true")
 
     start_parser = subparsers.add_parser("start")
     start_parser.add_argument("--plan-dir", required=True)
@@ -345,6 +496,11 @@ def main() -> int:
         return next_task(plan_dir, args.format)
     if args.command == "handoff":
         return handoff_task(plan_dir, args.task_id, args.format)
+    if args.command == "dispatch":
+        output_dir = Path(args.output_dir) if args.output_dir else None
+        return dispatch_task(
+            plan_dir, args.task_id, output_dir, args.format, args.mark_running
+        )
     if args.command == "start":
         return update_task_status(plan_dir, args.task_id, "running")
     if args.command == "complete":
