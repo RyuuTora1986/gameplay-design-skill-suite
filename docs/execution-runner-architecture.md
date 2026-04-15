@@ -192,7 +192,7 @@ Recommended dispatch artifacts:
 - `worker-handoff.md`
 - `completion-evidence.template.json`
 
-This is intentionally not a fake native agent launcher. It is the honest boundary that makes real automation possible later.
+This is intentionally not a native agent launcher. It is a stable execution boundary that makes later automation possible.
 
 ## Runner-Managed Dispatch Lifecycle
 

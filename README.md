@@ -17,7 +17,7 @@
   ·
   <a href="docs/pricing-and-commercial-offers.md">Commercial Offers</a>
   ·
-  <a href="docs/release-notes-v0.3.0.md">Release Notes</a>
+  <a href="docs/release-notes-v0.4.0.md">Release Notes</a>
 </p>
 
 ## What This Is
@@ -35,7 +35,7 @@ Instead of exposing ten unrelated prompts and hoping the user manually glues the
 - expands that package into a full Chinese game spec when needed
 - compiles that spec into an execution plan for agent-driven implementation
 - includes a first runner prototype for stepping through that execution plan
-- includes a dispatch layer that emits stable worker packets instead of pretending to auto-launch agents
+- includes a dispatch layer that emits stable worker packets for downstream execution
 - includes a runner-managed `dispatch -> ack -> complete` lifecycle so packet export and worker ownership are separate steps
 - includes dispatch review-gate checks so completion evidence must match the active dispatch and acknowledged worker
 - includes a worker adapter so external workers can execute against a dispatch directory instead of raw runner internals
@@ -116,7 +116,7 @@ The example package includes:
 - an execution plan with small dependency-aware tasks tied back to source refs and canonical IDs
 - a runner-ready path that can initialize state, emit worker dispatch packets, acknowledge worker pickup, and step through tasks in dependency order
 
-This is not a fake sample or a one-page teaser. It is a shipped validation artifact.
+This is a complete validation artifact, not just a visual showcase.
 
 ## Visual Preview
 
@@ -204,11 +204,11 @@ scripts/     Validation helpers
 - [docs/gyro-battle-case-study.md](docs/gyro-battle-case-study.md)
 - [docs/licensing-and-packaging.md](docs/licensing-and-packaging.md)
 - [docs/pricing-and-commercial-offers.md](docs/pricing-and-commercial-offers.md)
-- [docs/release-notes-v0.3.0.md](docs/release-notes-v0.3.0.md)
+- [docs/release-notes-v0.4.0.md](docs/release-notes-v0.4.0.md)
 
 ## Status
 
-- Version: `v0.3.0`
+- Version: `v0.4.0`
 - Public repo status: live
 - Validation status: included gameplay package, spec, execution plan, and runner smoke path with dispatch review-gate + worker-adapter checks pass local checks
 - Business posture: source-available showcase with commercial licensing path

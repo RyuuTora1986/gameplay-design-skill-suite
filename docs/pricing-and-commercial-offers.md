@@ -143,7 +143,7 @@ Good positioning:
 Avoid:
 
 - "buy now" language before you have a real checkout flow
-- pretending this is already a SaaS
+- presenting the repository clearly as a workflow capability package rather than a SaaS product
 - underpricing white-label rights
 
 ## Optional Future Expansion
@@ -157,4 +157,3 @@ If demand proves real, the next monetization layer could be:
 - review and QA add-ons
 
 But for now, high-trust licensing plus services is the stronger model.
-
