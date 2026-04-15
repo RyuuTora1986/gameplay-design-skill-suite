@@ -24,16 +24,22 @@
       <span class="brand-badge">GDS²</span>
       <span class="brand-copy">
         <strong>Gameplay Design Skill Suite</strong>
-        <span>orchestrator-first for Codex</span>
+        <span id="brand-tagline">orchestrator-first for Codex</span>
       </span>
     </a>
     <nav class="site-nav">
-      <a href="#pipeline">Pipeline</a>
-      <a href="#case-study">Case</a>
-      <a href="#offers">Offers</a>
-      <a href="#faq">FAQ</a>
+      <a href="#pipeline" id="nav-pipeline">Pipeline</a>
+      <a href="#case-study" id="nav-case">Case</a>
+      <a href="#offers" id="nav-offers">Offers</a>
+      <a href="#faq" id="nav-faq">FAQ</a>
     </nav>
-    <a class="button button-small button-ghost" href="README.md">Repo Docs</a>
+    <div class="header-actions">
+      <div class="language-switcher" aria-label="Language switcher">
+        <button class="lang-chip active" type="button" data-lang="en">EN</button>
+        <button class="lang-chip" type="button" data-lang="zh-CN">中文</button>
+      </div>
+      <a class="button button-small button-ghost" href="README.md" id="repo-docs-link">Repo Docs</a>
+    </div>
   </header>
 
   <main id="top">
@@ -44,21 +50,21 @@
         <div class="grid-field"></div>
       </div>
       <div class="hero-copy" data-reveal="up">
-        <p class="eyebrow">Gameplay design ops for chaos-resistant builders</p>
+        <p class="eyebrow" id="hero-eyebrow">Gameplay design ops for chaos-resistant builders</p>
         <h1>
-          <span class="outline">CHAOS IN.</span>
-          <span class="solid">SPEC OUT.</span>
+          <span class="outline" id="hero-outline">CHAOS IN.</span>
+          <span class="solid" id="hero-solid">SPEC OUT.</span>
         </h1>
-        <p class="hero-summary">
+        <p class="hero-summary" id="hero-summary">
           A cartoon-loud, structure-heavy workflow that takes raw game concepts,
           locks direction, forces stage order, cuts scope early, and lands on a
           gameplay package your AI coding stack can actually continue from.
         </p>
         <div class="hero-actions">
-          <a class="button button-primary" href="https://github.com/RyuuTora1986/gameplay-design-skill-suite" target="_blank" rel="noreferrer">Open GitHub Repo</a>
-          <a class="button button-secondary" href="#pipeline">See The Pipeline</a>
+          <a class="button button-primary" href="https://github.com/RyuuTora1986/gameplay-design-skill-suite" target="_blank" rel="noreferrer" id="hero-primary-link">Open GitHub Repo</a>
+          <a class="button button-secondary" href="#pipeline" id="hero-secondary-link">See The Pipeline</a>
         </div>
-        <div class="signal-strip">
+        <div class="signal-strip" id="signal-strip">
           <span>8 coordinated skills</span>
           <span>1 orchestrator-first entry</span>
           <span>validated gyro-battle example</span>
@@ -67,19 +73,19 @@
       </div>
       <div class="hero-stage" data-reveal="scale">
         <div class="stage-card">
-          <div class="stage-label">Cover Art // Live Workflow</div>
+          <div class="stage-label" id="stage-card-label">Cover Art // Live Workflow</div>
           <img src="assets/hero-mascot.svg" alt="Mascot illustration for Gameplay Design Skill Suite" class="mascot" />
           <div class="hero-stickers">
-            <div class="sticker sticker-1">LOCK DIRECTION</div>
-            <div class="sticker sticker-2">CUT SCOPE</div>
-            <div class="sticker sticker-3">SHIP THE PACKAGE</div>
+            <div class="sticker sticker-1" id="sticker-1">LOCK DIRECTION</div>
+            <div class="sticker sticker-2" id="sticker-2">CUT SCOPE</div>
+            <div class="sticker sticker-3" id="sticker-3">SHIP THE PACKAGE</div>
           </div>
         </div>
       </div>
     </section>
 
     <section class="marquee">
-      <div class="marquee-track">
+      <div class="marquee-track" id="marquee-track">
         <span>GAMEPLAY-DESIGN-ORCHESTRATOR</span>
         <span>FUN-SOURCE JUDGMENT</span>
         <span>PACING PRESSURE</span>
@@ -97,9 +103,9 @@
 
     <section class="section section-pipeline" id="pipeline">
       <div class="section-heading" data-reveal="up">
-        <p class="kicker">The pipeline is the product</p>
-        <h2>No random prompt soup. No stage skipping.</h2>
-        <p>
+        <p class="kicker" id="pipeline-kicker">The pipeline is the product</p>
+        <h2 id="pipeline-title">No random prompt soup. No stage skipping.</h2>
+        <p id="pipeline-body">
           The strongest selling point here is not "good writing." It is workflow
           ownership. One orchestrator. Ordered stages. Explicit loop-backs.
           Downstream-ready packaging.
@@ -108,7 +114,7 @@
       <div class="pipeline-layout">
         <div class="pipeline-summary" data-reveal="left">
           <div class="summary-panel">
-            <p class="panel-label">Current highlighted stage</p>
+            <p class="panel-label" id="stage-summary-label">Current highlighted stage</p>
             <h3 id="stage-title">Input Normalizer</h3>
             <p id="stage-body">
               Converts fuzzy input into usable design constraints, target player,
@@ -167,16 +173,16 @@
 
     <section class="section section-case" id="case-study">
       <div class="section-heading" data-reveal="up">
-        <p class="kicker">Validated example</p>
-        <h2>Gyro-battle web game, from direction lock to full spec.</h2>
+        <p class="kicker" id="case-kicker">Validated example</p>
+        <h2 id="case-title">Gyro-battle web game, from direction lock to full spec.</h2>
       </div>
       <div class="case-grid">
         <div class="case-window" data-reveal="left">
           <div class="window-top">
             <span></span><span></span><span></span>
-            <strong>gyro-battle/final-package</strong>
+            <strong id="case-window-title">gyro-battle/final-package</strong>
           </div>
-          <div class="window-body">
+          <div class="window-body" id="case-window-body">
             <p>chosen direction: Arena knock-out combat</p>
             <p>strongest promise: land one perfect hit and swing the round</p>
             <p>biggest scope risk: unreadable physics becomes random noise</p>
@@ -186,14 +192,14 @@
           </div>
         </div>
         <div class="case-copy" data-reveal="right">
-          <p class="case-tag">Why this example matters</p>
-          <h3>It proves the workflow can survive contact with a real game concept.</h3>
-          <p>
+          <p class="case-tag" id="case-tag">Why this example matters</p>
+          <h3 id="case-copy-title">It proves the workflow can survive contact with a real game concept.</h3>
+          <p id="case-copy-body">
             The included gyro-battle sample is not just a pretty mockup. It shows
             candidate direction selection, pacing corrections, scope cuts, system
             indexes, prototype acceptance, and downstream chapter-level tasking.
           </p>
-          <div class="case-bullets">
+          <div class="case-bullets" id="case-bullets">
             <div>
               <strong>Candidate A vs B</strong>
               <span>Arena combat won. Deep parts/economy lost for scope reasons.</span>
@@ -213,13 +219,13 @@
 
     <section class="section section-compare">
       <div class="section-heading" data-reveal="up">
-        <p class="kicker">Positioning</p>
-        <h2>Built for design geeks, not prompt tourists.</h2>
+        <p class="kicker" id="compare-kicker">Positioning</p>
+        <h2 id="compare-title">Built for design geeks, not prompt tourists.</h2>
       </div>
       <div class="compare-board" data-reveal="scale">
         <div class="compare-side compare-bad">
-          <p class="side-label">Generic prompt packs</p>
-          <ul>
+          <p class="side-label" id="compare-bad-label">Generic prompt packs</p>
+          <ul id="compare-bad-list">
             <li>start with vibes and genre labels</li>
             <li>no owner for stage order</li>
             <li>easy to bloat scope</li>
@@ -229,8 +235,8 @@
         </div>
         <div class="compare-divider">VS</div>
         <div class="compare-side compare-good">
-          <p class="side-label">Gameplay Design Skill Suite</p>
-          <ul>
+          <p class="side-label" id="compare-good-label">Gameplay Design Skill Suite</p>
+          <ul id="compare-good-list">
             <li>orchestrator owns the workflow</li>
             <li>downstream stages stay ordered</li>
             <li>MVP keep / cut stays visible</li>
@@ -243,9 +249,9 @@
 
     <section class="section section-offers" id="offers">
       <div class="section-heading" data-reveal="up">
-        <p class="kicker">Commercial path</p>
-        <h2>Public showcase outside. Paid leverage inside.</h2>
-        <p>
+        <p class="kicker" id="offers-kicker">Commercial path</p>
+        <h2 id="offers-title">Public showcase outside. Paid leverage inside.</h2>
+        <p id="offers-body">
           This repo is positioned as a source-available showcase, not a free-for-all
           open-source giveaway. The monetization logic is licensing plus enablement,
           not pretending this is already a SaaS.
@@ -253,30 +259,30 @@
       </div>
       <div class="offer-band">
         <article class="offer-slab" data-reveal="up">
-          <p class="offer-tier">Starter Adaptation</p>
-          <h3>$490+</h3>
-          <p>For solo builders and consultants testing the workflow in a real project.</p>
-          <ul>
+          <p class="offer-tier" id="offer-1-tier">Starter Adaptation</p>
+          <h3 id="offer-1-price">$490+</h3>
+          <p id="offer-1-body">For solo builders and consultants testing the workflow in a real project.</p>
+          <ul id="offer-1-list">
             <li>single-buyer commercial path</li>
             <li>basic onboarding pack</li>
             <li>one target adaptation pass</li>
           </ul>
         </article>
         <article class="offer-slab featured" data-reveal="up" data-delay="120">
-          <p class="offer-tier">Team Enablement</p>
-          <h3>$2.4K+</h3>
-          <p>For small studios that want an internal AI-assisted pre-production pipeline.</p>
-          <ul>
+          <p class="offer-tier" id="offer-2-tier">Team Enablement</p>
+          <h3 id="offer-2-price">$2.4K+</h3>
+          <p id="offer-2-body">For small studios that want an internal AI-assisted pre-production pipeline.</p>
+          <ul id="offer-2-list">
             <li>team commercial license path</li>
             <li>terminology alignment</li>
             <li>custom example package</li>
           </ul>
         </article>
         <article class="offer-slab" data-reveal="up" data-delay="240">
-          <p class="offer-tier">Custom Pipeline Build</p>
-          <h3>$8K+</h3>
-          <p>For studios and agencies that want genre-specific, branded, or white-label variants.</p>
-          <ul>
+          <p class="offer-tier" id="offer-3-tier">Custom Pipeline Build</p>
+          <h3 id="offer-3-price">$8K+</h3>
+          <p id="offer-3-body">For studios and agencies that want genre-specific, branded, or white-label variants.</p>
+          <ul id="offer-3-list">
             <li>custom skill edits</li>
             <li>revised validators</li>
             <li>deployment and rollout support</li>
@@ -287,40 +293,40 @@
 
     <section class="section section-faq" id="faq">
       <div class="section-heading" data-reveal="up">
-        <p class="kicker">Sharp questions</p>
-        <h2>FAQ for people who actually care about workflow integrity.</h2>
+        <p class="kicker" id="faq-kicker">Sharp questions</p>
+        <h2 id="faq-title">FAQ for people who actually care about workflow integrity.</h2>
       </div>
       <div class="faq-list">
-        <details data-reveal="up">
-          <summary>Is this open source?</summary>
-          <p>No. It is public for evaluation and discovery, but commercial reuse and redistribution are intentionally protected.</p>
+        <details data-reveal="up" id="faq-1">
+          <summary id="faq-1-q">Is this open source?</summary>
+          <p id="faq-1-a">No. It is public for evaluation and discovery, but commercial reuse and redistribution are intentionally protected.</p>
         </details>
-        <details data-reveal="up">
-          <summary>Can I trigger the stage skills one by one?</summary>
-          <p>Normally, no. The correct operating model is orchestrator-first. Stage skills are designed as controlled internal steps.</p>
+        <details data-reveal="up" id="faq-2">
+          <summary id="faq-2-q">Can I trigger the stage skills one by one?</summary>
+          <p id="faq-2-a">Normally, no. The correct operating model is orchestrator-first. Stage skills are designed as controlled internal steps.</p>
         </details>
-        <details data-reveal="up">
-          <summary>Does this automatically make a shippable game?</summary>
-          <p>No. It compresses pre-production ambiguity and produces stronger handoff materials. It does not replace implementation, tuning, or production judgment.</p>
+        <details data-reveal="up" id="faq-3">
+          <summary id="faq-3-q">Does this automatically make a shippable game?</summary>
+          <p id="faq-3-a">No. It compresses pre-production ambiguity and produces stronger handoff materials. It does not replace implementation, tuning, or production judgment.</p>
         </details>
-        <details data-reveal="up">
-          <summary>Why is the final spec in Chinese?</summary>
-          <p>Because the current downstream production target is a Chinese execution format. The workflow logic itself is broader than the language target.</p>
+        <details data-reveal="up" id="faq-4">
+          <summary id="faq-4-q">Why is the final spec in Chinese?</summary>
+          <p id="faq-4-a">Because the current downstream production target is a Chinese execution format. The workflow logic itself is broader than the language target.</p>
         </details>
       </div>
     </section>
 
     <section class="section final-cta">
       <div class="cta-poster" data-reveal="scale">
-        <p class="kicker">Final CTA</p>
-        <h2>If your game-design workflow still feels like prompt roulette, fix the topology first.</h2>
-        <p>
+        <p class="kicker" id="cta-kicker">Final CTA</p>
+        <h2 id="cta-title">If your game-design workflow still feels like prompt roulette, fix the topology first.</h2>
+        <p id="cta-body">
           Clone the repo, inspect the example, validate the outputs, then package the
           suite into your own Codex runtime or studio workflow.
         </p>
         <div class="hero-actions">
-          <a class="button button-primary" href="https://github.com/RyuuTora1986/gameplay-design-skill-suite" target="_blank" rel="noreferrer">View Repository</a>
-          <a class="button button-secondary" href="docs/pricing-and-commercial-offers.md">Read Commercial Offers</a>
+          <a class="button button-primary" href="https://github.com/RyuuTora1986/gameplay-design-skill-suite" target="_blank" rel="noreferrer" id="cta-primary-link">View Repository</a>
+          <a class="button button-secondary" href="docs/pricing-and-commercial-offers.md" id="cta-secondary-link">Read Commercial Offers</a>
         </div>
       </div>
     </section>

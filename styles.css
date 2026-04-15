@@ -122,6 +122,46 @@ a {
   color: var(--lime);
 }
 
+.header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lang-chip {
+  min-width: 60px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.76rem;
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.lang-chip:hover {
+  color: var(--cream);
+}
+
+.lang-chip.active {
+  background: linear-gradient(135deg, rgba(214, 255, 77, 0.22), rgba(86, 223, 244, 0.18));
+  color: var(--cream);
+  transform: translateY(-1px);
+}
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -803,6 +843,10 @@ a {
     flex-wrap: wrap;
   }
 
+  .header-actions {
+    margin-left: auto;
+  }
+
   .site-nav {
     order: 3;
     width: 100%;
@@ -861,6 +905,15 @@ a {
     gap: 12px;
     font-size: 0.74rem;
     flex-wrap: wrap;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .language-switcher {
+    flex: 0 0 auto;
   }
 
   .hero h1 {
