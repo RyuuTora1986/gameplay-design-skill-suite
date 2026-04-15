@@ -44,6 +44,7 @@ The runner should do exactly these things:
 5. Mark the task as complete, failed, or blocked
 6. Persist run state so the chain can resume after interruption
 7. Optionally emit a stable dispatch package for file-based worker handoff
+8. Require explicit acknowledgement before a dispatched task becomes running work
 
 The runner should not:
 
@@ -192,6 +193,28 @@ Recommended dispatch artifacts:
 - `completion-evidence.template.json`
 
 This is intentionally not a fake native agent launcher. It is the honest boundary that makes real automation possible later.
+
+## Runner-Managed Dispatch Lifecycle
+
+The runner now owns a minimal lifecycle instead of stopping at file export:
+
+1. `dispatch`
+2. `ack`
+3. `complete` / `fail` / `block`
+
+Meaning:
+
+- `dispatch` means the packet exists and has been issued
+- `ack` means a named worker has actually taken responsibility for execution
+- `complete` means the acknowledged worker returned structured evidence and passed the review gate
+
+This matters because it separates:
+
+- packet generation
+- execution ownership
+- completion evidence
+
+Without that split, the runner cannot honestly claim that dispatched work has actually started.
 
 ## Review Gate
 

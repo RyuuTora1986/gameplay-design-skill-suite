@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,10 @@ DISPATCH_FILES = {
     "handoff": "worker-handoff.md",
     "evidence_template": "completion-evidence.template.json",
 }
+
+
+def utc_now_iso() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -49,6 +54,12 @@ def init_state(plan_dir: Path, repo_root: str, branch: str) -> int:
             "verification_evidence": [],
             "blocked_reason": "",
             "last_dispatch_dir": "",
+            "dispatch_id": "",
+            "dispatch_status": "not_dispatched",
+            "dispatched_at": "",
+            "acknowledged_at": "",
+            "worker_label": "",
+            "handoff_mode": "",
         }
         for task in plan["tasks"]
     }
@@ -92,6 +103,12 @@ def get_task_entry(state: dict[str, Any], task_id: str) -> dict[str, Any]:
     entry.setdefault("verification_evidence", [])
     entry.setdefault("blocked_reason", "")
     entry.setdefault("last_dispatch_dir", "")
+    entry.setdefault("dispatch_id", "")
+    entry.setdefault("dispatch_status", "not_dispatched")
+    entry.setdefault("dispatched_at", "")
+    entry.setdefault("acknowledged_at", "")
+    entry.setdefault("worker_label", "")
+    entry.setdefault("handoff_mode", "")
     return entry
 
 
@@ -144,9 +161,9 @@ def build_dispatch_manifest(
             for name, filename in DISPATCH_FILES.items()
         },
         "completion_protocol": {
-            "start_command": (
-                f'python scripts/run_execution_plan.py start --plan-dir "{Path(state["plan_file"]).parent}" '
-                f'--task-id "{task["id"]}"'
+            "ack_command": (
+                f'python scripts/run_execution_plan.py ack --plan-dir "{Path(state["plan_file"]).parent}" '
+                f'--task-id "{task["id"]}" --worker-label "<worker-label>"'
             ),
             "complete_command": (
                 f'python scripts/run_execution_plan.py complete --plan-dir "{Path(state["plan_file"]).parent}" '
@@ -344,14 +361,27 @@ def dispatch_task(
     )
 
     entry = get_task_entry(state, task["id"])
+    if entry["status"] not in {"pending", "failed"}:
+        raise SystemExit(
+            f"{task['id']} cannot be dispatched from state {entry['status']}."
+        )
+    dispatch_id = f"{task['id']}-dispatch-{entry['attempt_count'] + 1}"
     entry["last_dispatch_dir"] = str(resolved_output_dir)
+    entry["dispatch_id"] = dispatch_id
+    entry["dispatch_status"] = "dispatched"
+    entry["dispatched_at"] = utc_now_iso()
+    entry["acknowledged_at"] = ""
+    entry["worker_label"] = ""
+    entry["handoff_mode"] = "dispatch-packet"
+    entry["blocked_reason"] = ""
     if mark_running:
-        if entry["status"] not in {"pending", "failed"}:
-            raise SystemExit(
-                f"{task['id']} cannot be marked running from state {entry['status']}."
-            )
         entry["status"] = "running"
+        entry["dispatch_status"] = "acknowledged"
+        entry["acknowledged_at"] = utc_now_iso()
+        entry["worker_label"] = "auto-dispatch"
         entry["attempt_count"] += 1
+    else:
+        entry["status"] = "dispatched"
     write_json(state_file, state)
 
     result = {
@@ -361,6 +391,7 @@ def dispatch_task(
             name: str(resolved_output_dir / filename)
             for name, filename in DISPATCH_FILES.items()
         },
+        "dispatch_id": dispatch_id,
         "marked_running": mark_running,
     }
 
@@ -373,6 +404,30 @@ def dispatch_task(
         print(f"- {name}: {path}")
     if mark_running:
         print("- state: running")
+    else:
+        print("- state: dispatched")
+    return 0
+
+
+def acknowledge_dispatch(plan_dir: Path, task_id: str, worker_label: str) -> int:
+    plan, state, state_file = load_plan_and_state(plan_dir)
+    if task_id not in state["tasks"]:
+        raise SystemExit(f"Unknown task id: {task_id}")
+    find_task(plan, task_id)
+    entry = get_task_entry(state, task_id)
+    if entry["status"] != "dispatched":
+        raise SystemExit(f"{task_id} must be in dispatched state before ack.")
+    if entry["dispatch_status"] != "dispatched":
+        raise SystemExit(f"{task_id} has no active dispatch to acknowledge.")
+
+    entry["status"] = "running"
+    entry["dispatch_status"] = "acknowledged"
+    entry["worker_label"] = worker_label
+    entry["acknowledged_at"] = utc_now_iso()
+    entry["attempt_count"] += 1
+
+    write_json(state_file, state)
+    print(f"Acknowledged {task_id} -> running ({worker_label})")
     return 0
 
 
@@ -397,9 +452,15 @@ def update_task_status(
             raise SystemExit(f"{task_id} must be in running state before completion.")
         if verification is None:
             raise SystemExit("Completion requires structured verification evidence.")
+    elif status == "running":
+        if entry["status"] not in {"pending", "failed", "dispatched"}:
+            raise SystemExit(f"{task_id} cannot enter running from {entry['status']}.")
+    elif status in {"failed", "blocked"}:
+        if entry["status"] not in {"dispatched", "running"}:
+            raise SystemExit(f"{task_id} cannot be marked {status} from {entry['status']}.")
 
     entry["status"] = status
-    if status in {"running", "failed", "blocked"}:
+    if status == "running":
         entry["attempt_count"] += 1
     if summary:
         entry["last_summary"] = summary
@@ -412,6 +473,7 @@ def update_task_status(
         entry["blocked_reason"] = ""
 
     if status == "completed":
+        entry["dispatch_status"] = "completed"
         if task["type"] == "ui":
             verification_names = " ".join(
                 item.get("name", "") for item in verification["verification_run"] if isinstance(item, dict)
@@ -419,6 +481,16 @@ def update_task_status(
             if "browser" not in verification_names:
                 raise SystemExit("UI completion evidence must include a browser verification entry.")
         state["last_completed_task"] = task_id
+    elif status == "running":
+        entry["dispatch_status"] = "acknowledged"
+        if not entry["acknowledged_at"]:
+            entry["acknowledged_at"] = utc_now_iso()
+        if not entry["worker_label"]:
+            entry["worker_label"] = "legacy-start"
+    elif status == "failed":
+        entry["dispatch_status"] = "failed"
+    elif status == "blocked":
+        entry["dispatch_status"] = "blocked"
 
     write_json(state_file, state)
     print(f"Updated {task_id} -> {status}")
@@ -434,7 +506,13 @@ def print_status(plan_dir: Path) -> int:
     print("")
     for task in plan["tasks"]:
         entry = get_task_entry(state, task["id"])
-        print(f"{task['id']} [{entry['status']}] {task['title']}")
+        dispatch_bits = []
+        if entry["dispatch_status"] != "not_dispatched":
+            dispatch_bits.append(f"dispatch={entry['dispatch_status']}")
+        if entry["worker_label"]:
+            dispatch_bits.append(f"worker={entry['worker_label']}")
+        dispatch_suffix = f" ({', '.join(dispatch_bits)})" if dispatch_bits else ""
+        print(f"{task['id']} [{entry['status']}] {task['title']}{dispatch_suffix}")
     return 0
 
 
@@ -465,6 +543,11 @@ def main() -> int:
     dispatch_parser.add_argument("--output-dir")
     dispatch_parser.add_argument("--format", choices=["markdown", "json"], default="markdown")
     dispatch_parser.add_argument("--mark-running", action="store_true")
+
+    ack_parser = subparsers.add_parser("ack")
+    ack_parser.add_argument("--plan-dir", required=True)
+    ack_parser.add_argument("--task-id", required=True)
+    ack_parser.add_argument("--worker-label", required=True)
 
     start_parser = subparsers.add_parser("start")
     start_parser.add_argument("--plan-dir", required=True)
@@ -501,6 +584,8 @@ def main() -> int:
         return dispatch_task(
             plan_dir, args.task_id, output_dir, args.format, args.mark_running
         )
+    if args.command == "ack":
+        return acknowledge_dispatch(plan_dir, args.task_id, args.worker_label)
     if args.command == "start":
         return update_task_status(plan_dir, args.task_id, "running")
     if args.command == "complete":

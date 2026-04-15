@@ -163,6 +163,7 @@ This layer consumes `execution-plan.json`, persists `execution-run-state.json`, 
   - stops task sprawl by enforcing one-task scope
   - creates a stable bridge into subagent or coding-worker execution
   - exposes an honest file-based dispatch boundary for later automation
+  - separates dispatch issuance from worker acknowledgement
 
 ## Public Demo Priorities
 

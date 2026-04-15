@@ -38,6 +38,7 @@
 - 在实现前继续编译成 agent 可执行的 execution plan
 - 用最小 runner 原型按依赖顺序驱动任务执行
 - 输出可落盘的 dispatch 包，而不是假装直接自动拉起 agent
+- 用 `dispatch -> ack -> complete` 把“发任务”和“真正接单执行”拆开
 
 它解决的不是“灵感更多”，而是“从模糊概念到结构化执行”的可靠链路。
 
@@ -66,7 +67,7 @@
 | `gameplay-coding-handoff-compiler` | 把玩法包编译成 scene、UI、object、state、variable 和 prototype acceptance |
 | `game-design-spec` | 将成熟玩法包展开成完整中文游戏规格书与任务包 |
 | `game-design-execution-compiler` | 把成熟 spec 编译成 `execution-plan.json` 和 `execution-plan.md`，供 agent 执行 |
-| `game-design-execution-runner` | 读取 execution plan、持久化 run state、输出受控 handoff 或 dispatch 包，并在完成时强制 review gate |
+| `game-design-execution-runner` | 读取 execution plan、持久化 run state、输出受控 handoff 或 dispatch 包，跟踪 `dispatch -> ack -> complete`，并在完成时强制 review gate |
 
 拓扑细节见 [docs/skill-catalog.md](docs/skill-catalog.md)。
 
@@ -113,7 +114,7 @@ Raw game idea
 - 带假设清单、系统索引、公式和原型验收的玩法包
 - 包含 UI、平衡、配置、音画、QA 和交付映射的完整规格
 - 一个绑定 source refs 和 canonical IDs 的 execution plan
-- 一条可初始化状态、产出 dispatch 包并按依赖顺序逐任务推进的 runner 路径
+- 一条可初始化状态、产出 dispatch 包、确认 worker 接单并按依赖顺序逐任务推进的 runner 路径
 
 它不是 teaser，也不是伪样例，而是通过本地验证器的完整交付物。
 

@@ -31,3 +31,13 @@ When the coordinator needs a file-based handoff instead of an inline prompt, the
 - `completion-evidence.template.json`
 
 This package is the stable boundary between the execution plan and real worker execution.
+
+## Worker Lifecycle
+
+The worker lifecycle is:
+
+1. coordinator runs `dispatch`
+2. worker or supervisor runs `ack`
+3. worker finishes with `complete`, `fail`, or `block`
+
+The worker must not complete directly from a dispatched-but-unacknowledged state.

@@ -21,10 +21,17 @@ Each task entry must include:
 - `verification_evidence`
 - `blocked_reason`
 - `last_dispatch_dir`
+- `dispatch_id`
+- `dispatch_status`
+- `dispatched_at`
+- `acknowledged_at`
+- `worker_label`
+- `handoff_mode`
 
 ## Allowed Status Values
 
 - `pending`
+- `dispatched`
 - `running`
 - `completed`
 - `blocked`
@@ -49,6 +56,15 @@ Each evidence object should contain:
 ## Dispatch Tracking
 
 `last_dispatch_dir` should record the latest dispatch artifact directory generated for the task.
+
+`dispatch_status` should record the worker-lifecycle state of the active dispatch. Recommended values:
+
+- `not_dispatched`
+- `dispatched`
+- `acknowledged`
+- `completed`
+- `blocked`
+- `failed`
 
 This makes the runner resumable across:
 

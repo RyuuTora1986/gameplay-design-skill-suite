@@ -70,7 +70,7 @@ if (-not (Test-Path "$tmpDir\\dispatch-TASK-001\\completion-evidence.template.js
 }
 Invoke-Checked {
   python "$root\\skills\\game-design-execution-runner\\scripts\\run_execution_plan.py" `
-    start --plan-dir "$tmpDir" --task-id "TASK-001"
+    ack --plan-dir "$tmpDir" --task-id "TASK-001" --worker-label "smoke-worker"
 }
 @'
 {
