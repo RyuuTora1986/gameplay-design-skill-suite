@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>Orchestrator-first Codex skills for turning raw game ideas into validated gameplay packages and Chinese production-ready game specs.</strong>
+  <strong>Orchestrator-first Codex skills for turning raw game ideas into validated gameplay packages, Chinese production-ready game specs, and agent-executable execution plans.</strong>
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
   ·
   <a href="docs/pricing-and-commercial-offers.md">Commercial Offers</a>
   ·
-  <a href="docs/release-notes-v0.1.0.md">Release Notes</a>
+  <a href="docs/release-notes-v0.2.0.md">Release Notes</a>
 </p>
 
 ## What This Is
@@ -26,13 +26,14 @@ This repository packages a game-design workflow for Codex around one hard rule:
 
 `gameplay-design-orchestrator` is the only normal upstream entry point.
 
-Instead of exposing eight unrelated prompts and hoping the user manually glues them together, this suite:
+Instead of exposing nine unrelated prompts and hoping the user manually glues them together, this suite:
 
 - locks direction before system expansion
 - drives the gameplay stages in order
 - keeps scope discipline visible
 - compiles the result into a downstream-ready gameplay package
 - expands that package into a full Chinese game spec when needed
+- compiles that spec into an execution plan for agent-driven implementation
 
 The result is not just "better ideation." It is a more reliable bridge from vague concept to structured execution.
 
@@ -44,7 +45,7 @@ Most public prompt packs for game design fail in one of three ways:
 | --- | --- |
 | Starts with theme, lore, or mechanics soup | Starts with direction lock, player promise, and constraints |
 | Treats every prompt as standalone | Treats downstream stages as a controlled chain under the orchestrator |
-| Produces pretty but non-executable prose | Produces package structure, registries, state thinking, and spec-ready outputs |
+| Produces pretty but non-executable prose | Produces package structure, registries, spec-ready outputs, and execution-ready task graphs |
 | Has no validation | Includes local validators and a real example |
 | Expands scope too early | Forces MVP keep/cut decisions before downstream handoff |
 
@@ -60,6 +61,7 @@ Most public prompt packs for game design fail in one of three ways:
 | `gameplay-system-weaver-and-scope-cutter` | Maps systems, resources, MVP keep/cut, and production danger zones |
 | `gameplay-coding-handoff-compiler` | Compiles the locked package into scenes, UI, objects, states, variables, and prototype acceptance |
 | `game-design-spec` | Expands the mature gameplay package into a full Chinese game design spec and task pack |
+| `game-design-execution-compiler` | Compiles the mature spec into `execution-plan.json` and `execution-plan.md` for agent execution |
 
 For topology details, see [docs/skill-catalog.md](docs/skill-catalog.md).
 
@@ -77,6 +79,8 @@ Raw game idea
   -> Gameplay Design Package
   -> game-design-spec
   -> Full Chinese Game Design Spec
+  -> game-design-execution-compiler
+  -> execution-plan.json + execution-plan.md
 ```
 
 Operational rules:
@@ -92,6 +96,7 @@ This repository includes a fully validated gyro-battle web game example:
 - Index: [examples/gyro-battle/00-direct-output-index.md](examples/gyro-battle/00-direct-output-index.md)
 - Gameplay package: [examples/gyro-battle/final-package/](examples/gyro-battle/final-package/)
 - Full spec: [examples/gyro-battle/final-spec/](examples/gyro-battle/final-spec/)
+- Execution plan: [examples/gyro-battle/final-execution-plan/](examples/gyro-battle/final-execution-plan/)
 - Case study write-up: [docs/gyro-battle-case-study.md](docs/gyro-battle-case-study.md)
 
 The example package includes:
@@ -100,6 +105,7 @@ The example package includes:
 - loop-back notes from pacing and scope pressure
 - a gameplay package with assumption list, system indexes, formulas, and prototype acceptance
 - a full spec with system rules, UI tasking, balance tasks, art/audio constraints, QA, and delivery mapping
+- an execution plan with small dependency-aware tasks tied back to source refs and canonical IDs
 
 This is not a fake sample or a one-page teaser. It is a shipped validation artifact.
 
@@ -145,7 +151,7 @@ See:
 | --- | --- | --- |
 | Generic prompt bundle | Quick inspiration | Weak structure, no workflow ownership, easy scope drift |
 | Single mega-prompt | Fast experiments | Fragile outputs, hard to revise, no stage accountability |
-| This suite | Structured upstream game design with AI handoff | Requires workflow discipline and works best when followed as designed |
+| This suite | Structured game design plus execution compilation | Requires workflow discipline and works best when followed as designed |
 
 ## Installation
 
@@ -168,13 +174,14 @@ Or run the validators individually:
 ```powershell
 python .\skills\gameplay-design-orchestrator\scripts\validate_gameplay_package.py --package-dir .\examples\gyro-battle\final-package
 python .\skills\game-design-spec\scripts\validate_spec.py --task-dir .\examples\gyro-battle\final-spec
+python .\skills\game-design-execution-compiler\scripts\validate_execution_plan.py --plan-dir .\examples\gyro-battle\final-execution-plan
 ```
 
 ## Repository Layout
 
 ```text
 skills/      Core skill suite
-examples/    Validated example outputs
+examples/    Validated example outputs including execution plans
 docs/        Launch copy, FAQ, licensing, pricing, release notes
 assets/      README and promo visuals
 scripts/     Validation helpers
@@ -187,11 +194,11 @@ scripts/     Validation helpers
 - [docs/gyro-battle-case-study.md](docs/gyro-battle-case-study.md)
 - [docs/licensing-and-packaging.md](docs/licensing-and-packaging.md)
 - [docs/pricing-and-commercial-offers.md](docs/pricing-and-commercial-offers.md)
-- [docs/release-notes-v0.1.0.md](docs/release-notes-v0.1.0.md)
+- [docs/release-notes-v0.2.0.md](docs/release-notes-v0.2.0.md)
 
 ## Status
 
-- Version: `v0.1.0`
+- Version: `v0.2.0`
 - Public repo status: live
-- Validation status: included example passes local validators
+- Validation status: included gameplay package, spec, and execution plan pass local validators
 - Business posture: source-available showcase with commercial licensing path

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Execution Compiler"
+  short_description: "Compile mature game specs into agent-executable task plans."
+  default_prompt: "Use $game-design-execution-compiler to turn this mature game spec into execution-plan.json and execution-plan.md."

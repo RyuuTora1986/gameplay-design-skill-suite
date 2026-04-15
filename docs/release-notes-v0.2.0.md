@@ -8,7 +8,7 @@
 
 This release expands the public gameplay design skill suite into a design-to-execution chain for Codex.
 
-The suite is built around one strong operating model:
+The suite is now built around one stronger operating model:
 
 - `gameplay-design-orchestrator` owns the upstream flow
 - downstream `gameplay-*` skills behave as controlled ordered stages
@@ -19,15 +19,14 @@ The suite is built around one strong operating model:
 
 - added 9 coordinated game design skills
 - locked orchestrator-first topology
-- included a validated gyro-battle web game example
 - added execution-plan compilation as a new post-spec layer
+- included a validated gyro-battle execution-plan example
 - included local validators for gameplay package, full spec, and execution plan
-- added launch-ready repo packaging and commercial positioning docs
-- added visual repo assets and promo infrastructure
+- updated launch-ready repo packaging and promo copy for the full chain
 
 ## Why This Matters
 
-Many AI game-design repos stop at ideation. This suite is designed to carry the work further:
+Many AI game-design repos stop at ideation. This suite now carries the work further:
 
 - direction lock
 - repeatable-fun hypothesis

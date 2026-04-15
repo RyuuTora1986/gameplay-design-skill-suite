@@ -1,0 +1,167 @@
+{
+  "version": "0.1",
+  "project": {
+    "name": "gyro-battle",
+    "source_type": "game-design-spec",
+    "source_files": [
+      "examples/gyro-battle/final-spec/01-master-spec.md",
+      "examples/gyro-battle/final-spec/04-ui-task.md",
+      "examples/gyro-battle/final-spec/06-balance-task.md",
+      "examples/gyro-battle/final-spec/07-config-task.md",
+      "examples/gyro-battle/final-spec/10-qa-task.md",
+      "examples/gyro-battle/final-spec/11-delivery-task.md"
+    ],
+    "execution_mode": "single-agent-iterative"
+  },
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Build arena HUD shell",
+      "type": "ui",
+      "depends_on": [],
+      "source_refs": [
+        "04-ui-task.md#HUD-01",
+        "01-master-spec.md#3"
+      ],
+      "canonical_ids": [
+        "SYS-01",
+        "CFG-01"
+      ],
+      "goal": "Render the first-pass combat HUD layout needed for a playable round.",
+      "deliverables": [
+        "HUD root container",
+        "health region",
+        "charge region",
+        "timer region"
+      ],
+      "acceptance_criteria": [
+        "HUD renders all required combat regions from the UI task",
+        "No approved HUD region is silently omitted",
+        "Typecheck passes",
+        "Browser verification passes"
+      ],
+      "verification": [
+        "npm run typecheck",
+        "browser-check"
+      ],
+      "notes": [
+        "Do not redesign information hierarchy",
+        "Use the approved combat terminology from the spec"
+      ]
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement core round-state transitions",
+      "type": "logic",
+      "depends_on": [
+        "TASK-001"
+      ],
+      "source_refs": [
+        "01-master-spec.md#3",
+        "04-ui-task.md#state-matrix"
+      ],
+      "canonical_ids": [
+        "SYS-01",
+        "VAR-01"
+      ],
+      "goal": "Implement the minimal round-state flow needed for one complete loop.",
+      "deliverables": [
+        "idle to running transition",
+        "running to success transition",
+        "running to failure transition",
+        "reset path back to idle"
+      ],
+      "acceptance_criteria": [
+        "A full round loop can start, resolve, and reset cleanly",
+        "State transitions follow the spec-defined lifecycle",
+        "Typecheck passes",
+        "Relevant logic tests pass"
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test -- round-state"
+      ],
+      "notes": [
+        "Keep the first pass narrow",
+        "Do not add meta-progression or economy logic here"
+      ]
+    },
+    {
+      "id": "TASK-003",
+      "title": "Add first-pass reward formula wiring",
+      "type": "config",
+      "depends_on": [
+        "TASK-002"
+      ],
+      "source_refs": [
+        "06-balance-task.md#FML-01",
+        "07-config-task.md#CFG-01"
+      ],
+      "canonical_ids": [
+        "FML-01",
+        "CFG-01",
+        "VAR-01"
+      ],
+      "goal": "Wire the first reward calculation so the prototype loop produces measurable output.",
+      "deliverables": [
+        "reward config entry",
+        "formula hookup",
+        "variable mapping"
+      ],
+      "acceptance_criteria": [
+        "Reward value is computed from the approved config and formula IDs",
+        "No hard-coded duplicate balance values are introduced outside config",
+        "Typecheck passes",
+        "Relevant logic tests pass"
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test -- reward-formula"
+      ],
+      "notes": [
+        "Keep balance authoring anchored to config",
+        "Do not rebalance the whole game in this task"
+      ]
+    },
+    {
+      "id": "TASK-004",
+      "title": "Create QA pass for playable combat loop",
+      "type": "qa",
+      "depends_on": [
+        "TASK-001",
+        "TASK-002",
+        "TASK-003"
+      ],
+      "source_refs": [
+        "10-qa-task.md#playable-loop",
+        "11-delivery-task.md#implementation-map"
+      ],
+      "canonical_ids": [
+        "SYS-01",
+        "FML-01",
+        "CFG-01"
+      ],
+      "goal": "Turn the first playable loop into an explicit verification gate.",
+      "deliverables": [
+        "QA checklist entry",
+        "loop verification scenario",
+        "failure-state verification scenario"
+      ],
+      "acceptance_criteria": [
+        "Playable loop verification covers start, resolve, and reset",
+        "QA explicitly checks the reward output path",
+        "Typecheck passes",
+        "Browser verification passes"
+      ],
+      "verification": [
+        "npm run typecheck",
+        "browser-check",
+        "manual-qa-checklist"
+      ],
+      "notes": [
+        "QA should reference the same canonical IDs used in implementation",
+        "Do not broaden this pass into full-game certification"
+      ]
+    }
+  ]
+}
